@@ -20,7 +20,7 @@ Link for lab -> https://uklabs.kodekloud.com/courses/labs-kubernetes-for-the-abs
 
 - Container Runtime - The container runtime is the underlying software that is used to run containers. In our case it happens to be Docker.
 
-- Controller - The controllers are the brain behind orchestration. They are responsible for noticing and responding when nodes, containers or endpoints goes down. The controllers makes decisions to bring up new containers in such cases.
+- Controller - The controllers are the brain behvirtuind orchestration. They are responsible for noticing and responding when nodes, containers or endpoints goes down. The controllers makes decisions to bring up new containers in such cases.
 
 - Scheduler - The scheduler is responsible for distributing work or containers across multiple nodes. It looks for newly created containers and assigns them to Nodes.
 
@@ -32,4 +32,10 @@ kubect cluster-info              # View information on a cluster
 kubectl get nodes                # Get all the nodes in a cluster
 ```
 
-- pods have a single 
+- pods have a single instance of an application. Pods are in nodes 
+
+![Alt text](image-1.png)
+
+- Pods have a 1 to 1 to relationships to existing containers. New users = new pods. A single pod can have many containers but not of the same container. You can have helper containers that live alongside the live pod. 
+
+- Instead of defining volumes for helper containers and containers, you use pods. Pods makes resources available without having to necessarily create shared volumes. 
