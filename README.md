@@ -39,3 +39,125 @@ kubectl get nodes                # Get all the nodes in a cluster
 - Pods have a 1 to 1 to relationships to existing containers. New users = new pods. A single pod can have many containers but not of the same container. You can have helper containers that live alongside the live pod. 
 
 - Instead of defining volumes for helper containers and containers, you use pods. Pods makes resources available without having to necessarily create shared volumes. 
+
+## Minikube ##
+
+- Minikube is an open-source tool that allows you to run a single-node Kubernetes cluster on your local machine. It's designed to help developers and users get a local Kubernetes environment up and running quickly for development, testing, and learning purposes.
+
+```
+minikube start                        # start a Minikube cluster. 
+minikube start --driver=virtualbox    # starts a Minikube cluster using VirtualBox as 
+                                      # the driver for the virtual machine (VM) that will run 
+                                      # the Kubernetes cluster.
+minikube status                       # shows the status of kubelet, apiserver and kubeconfig
+
+kubectl create deployment hello-minikube --image=kicbase/echo-server:1.0  
+            # creates a Kubernetes Deployment in your Minikube cluster.
+            # --image=kicbase/echo-server:1.0: This specifies the container image to use for the
+            # pods in the Deployment. The image kicbase/echo-server:1.0 is used in this case. 
+            # This image is likely a simple HTTP server that echoes back requests, which is
+            # useful for testing and demonstration purposes.
+
+kubectl get nodes                     # Shows the nodes that are running
+
+kubectl get deployments               # shows if the deployment was successful 1/1 shows 
+                                      # successful deployment 
+
+kubectl delete service hello-minikube # deletes service if it exists from previous 
+
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+                #--type=NodePort: This specifies the type of Service to create. A NodePort
+                # Service exposes the Service on each Node's IP at a static port (the NodePort).
+                # This makes the Service accessible from outside the cluster by requesting
+                # <NodeIP>:<NodePort>.
+                # --port=8080: This specifies the port that the Service will expose. 
+                # It maps to the target port on the pods managed by the Deployment. 
+                # In this case, port 8080 on the Service will forward traffic to 
+                # port 8080 on the pods.
+
+minikube service hello-minikube --url
+                # Get the url of the exposed service
+
+kubectl desribe pods 
+                # gives more description of the pods
+
+kubectl desribe pod myapp-pod
+                # Gives information specific to that pod
+
+kubectl get pods -o wide 
+                # provides additional information such as the node where the pod is running
+                # and the ip address
+
+          
+
+```
+
+- Kubernetes Concepts – https://kubernetes.io/docs/concepts/
+
+- Pod Overview- https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/
+
+## YAML - adding a list to a dictionary ##
+
+``` 
+Employee:
+  Name: Jacob
+  Sex: Male
+  Age: 30
+  Title: Systems Engineer
+
+  Projects:                         # This is the list inside a dictionary. Jacob supports A & S
+    - Automation
+    - Support
+
+```
+
+- Update the YAML file to include Jacob's pay slips. Add a new property "Payslips" and create a
+- list of pay slip details (Use list of dictionaries). Each payslip detail contains Month and Wage.
+
+![Alt text](image-2.png)
+
+```
+Employee:
+  Name: Jacob
+  Sex: Male
+  Age: 30
+  Title: Systems Engineer
+  Projects:
+    - Automation
+    - Support
+  Payslips:
+    - Month: June
+      Wage: 4000
+    - Month: July
+      Wage: 4500
+    - Month: August
+      Wage: 4000
+```
+
+## pod-definition.yml ##
+
+```
+apiVersion: V1  
+kind: Pod
+metadata:
+    name: myapp
+    labels:
+        app: myapp
+        type: front-end
+
+spec:
+    containers:
+        - name: nginx-container
+          image: nginx
+```
+
+| Kind           | Version        |
+| -------------- | -------------- |
+| Pod            | v1             |
+| Service        | v1             | 
+| ReplicaSet     | apps/v1        | 
+| Deployment     | apps/v1        | 
+
+
+
+
