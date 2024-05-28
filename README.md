@@ -114,7 +114,7 @@ Employee:
 - Update the YAML file to include Jacob's pay slips. Add a new property "Payslips" and create a
 - list of pay slip details (Use list of dictionaries). Each payslip detail contains Month and Wage.
 
-![Alt text](image-2.png)
+![Alt text](image-2.PNG)
 
 ```
 Employee:
