@@ -84,15 +84,30 @@ kubectl desribe pods
 kubectl desribe pod myapp-pod
                 # Gives information specific to that pod
 
+kubectl get pods 
+                # shows the number of pods running
+
 kubectl get pods -o wide 
-                # provides additional information such as the node where the pod is running
-                # and the ip address
+                # provides additional information such as the node where 
+                # the pod is running and the ip address
 
 kubectl version --client
                 # How to get the version of kubernetes that is running
           
 kubectl get nodes -o wide 
                 # How to get the OS version that kubernetes is running on
+
+kubectl run nginx --image=nginx
+                # Create a new pod with the nginx image.
+
+kubectl get pods -o wide
+                # tells you the node that runs the pods
+
+kubectl describe pod webapp
+                # How many containers are part of the pod webapp?
+
+kubectl apply -f redis.yaml
+                # how to run a pod after creating a yaml file
 
 ```
 
