@@ -88,7 +88,11 @@ kubectl get pods -o wide
                 # provides additional information such as the node where the pod is running
                 # and the ip address
 
+kubectl version --client
+                # How to get the version of kubernetes that is running
           
+kubectl get nodes -o wide 
+                # How to get the OS version that kubernetes is running on
 
 ```
 
@@ -157,6 +161,38 @@ spec:
 | Service        | v1             | 
 | ReplicaSet     | apps/v1        | 
 | Deployment     | apps/v1        | 
+
+- use the gear icon after installing YAML extension and add this line of code. Go to Yaml: Schemas. 
+
+Edit in settings.json
+```
+"yaml.schemas": {
+        
+        "kubernetes":"*.yaml"
+    }
+```
+
+Introduction: Postgres Docker image requires an environment variable to be set for password.  
+
+Instruction: Set an environment variable for the docker container. POSTGRES_PASSWORD with a value mysecretpassword. I know we haven't discussed this in the lecture, but it is easy. To pass in an environment variable add a new property 'env' to the container object. It is a sibling of image and name. env is an array/list. So add a new item under it. The item will have properties name and value. name should be the name of the environment variable - POSTGRES_PASSWORD. And value should be the password - mysecretpassword
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres
+  labels:
+    tier: db-tier
+spec:
+  containers:
+    - name: postgres
+      image: postgres
+      env:
+      - name: POSTGRES_PASSWORD
+        value: mysecretpassword
+
+```
+
 
 
 
