@@ -743,6 +743,10 @@ Note: We cannot deploy containers directly on kubernetes. The smallest object we
 
 - Worker pod has no service because it is not running any service that must be accessed by another application or external users. 
 
+- SEE VOTING APP FOLDER FOR SERVICE FILES
+
+
+
 
 
 
