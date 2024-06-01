@@ -548,10 +548,10 @@ curl http:192.168.1.2:30008
 
 ## Cluster IP ##
 
-![alt text](images/image-14.png)
+![alt text](images/image-13.png)
 
 - A full stack web application typically has different kinds of PODs hosting different parts of an application.  You may have a number of PODs running a front-end web server, another set of PODs running a backend server, a set of PODs running a key- value store like Redis, another set of PODs running a persistent database like MySQL etc.
-
+ 
 - The web front-end servers need to connect to the backend-workers and the 
 backend-workers need to connect to database as well as the redis services. So what IS the right way to establish connectivity between these PODs? 
  
@@ -731,12 +731,17 @@ Note: We cannot deploy containers directly on kubernetes. The smallest object we
 - Steps
   - Deploy PODs
   - Create Services (Cluster IP)
-  - Create Services (LoadBalancer)
+    - redis (image name -> redis)
+    - db (image name -> postgresql)
+  - Create Services (LoadBalancer, NodePort)
+    - voting-app (image name -> kodekloud/examplevotingapp_vote:v1)
+    - result-app (kodekloud/examplevotingapp_result:v1)
 
-![alt text](images/image-13.png)
+- worker image name -> kodekloud/examplevotingapp_worker:v1
 
+![alt text](images/image-14.png)
 
-
+- Worker pod has no service because it is not running any service that must be accessed by another application or external users. 
 
 
 
