@@ -745,6 +745,12 @@ Note: We cannot deploy containers directly on kubernetes. The smallest object we
 
 - SEE VOTING APP FOLDER FOR SERVICE FILES
 
+- How to get url for voting service and result service 
+
+```
+minikube service voting-service --url
+minikube service result-service --url
+```
 
 
 
