@@ -4,7 +4,7 @@ metadata:
   name: db
   labels: 
      name: postgres-service
-     app: demo-voting-appp
+     app: demo-voting-app
 
 
 spec:
@@ -13,4 +13,4 @@ spec:
       targetPort: 5432
   selector:
     name: postgres-pod
-    app: demo-voting-appp
+    app: demo-voting-app
