@@ -10,4 +10,8 @@ class CafeManagementSystemApplicationTests {
 	void contextLoads() {
 	}
 
+    //@Entity
+    //@DynamicUpdate
+    public static class User {
+    }
 }
