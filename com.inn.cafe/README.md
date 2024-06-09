@@ -21,3 +21,5 @@ This project contains the following packages.
 - utils: Provides utility classes and methods.
 - wrapper: Contains wrapper classes to enhance or adapt object behavior.
 
+- The Hibernate dialect is a configuration setting in Hibernate ORM (Object-Relational Mapping) that specifies the type of SQL database being used. 
+- This setting allows Hibernate to generate optimized SQL statements tailored for the specific database dialect. Different databases have unique SQL dialects, and Hibernate needs to know which one to use to ensure compatibility and take advantage of database-specific features.
