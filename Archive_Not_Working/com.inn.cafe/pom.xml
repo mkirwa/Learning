@@ -9,7 +9,7 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.inn.cafe</groupId>
-	<artifactId>com.inn.cafe</artifactId>
+	<artifactId>cafe</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Cafe Management System</name>
 	<description>Cafe Management system project video</description>
