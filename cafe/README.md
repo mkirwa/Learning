@@ -31,3 +31,10 @@ in a vertical format instead of the default tabular format.
 select * from user \G;
 ```
 
+## Implementing GWT Token ##
+
+- JWT - Json Web Token. When the api is accessed, it checks if that is a valid user or not. 
+- When the user logs in for the first time, it checks the database for the user.
+- If the user exists then it assigns that user a valid token
+- Whenever the user logs in from next time, we check this token and give this user access. 
+- 
