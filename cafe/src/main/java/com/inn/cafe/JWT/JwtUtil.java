@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 import java.util.Date;
@@ -30,6 +29,8 @@ public class JwtUtil {
         return extractClaims(token, Claims::getExpiration);
     }
 
+    // Extracts specific claims from a JWT token using a provided function claimsResolver
+    // token: The JWT token from which claims are to be extracted.
     public <T> T extractClaims(String token, Function<Claims, T> claimsResolver){
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
