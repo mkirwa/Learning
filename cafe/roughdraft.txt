@@ -188,3 +188,356 @@ public class SecurityConfig {
         return (web) -> web.ignoring().requestMatchers("/user/login", "/user/signup", "/user/forgotPassword");
     }
 }
+
+////////////////////////////////////////// OLD POM XML FILE ////////////////////////////////////////////////////////
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.3.0</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.inn.cafe</groupId>
+	<artifactId>cafe</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>cafe</name>
+	<description>Cafe Management System</description>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- For downloading pdfs  -->
+		<dependency>
+		<groupId>com.itextpdf</groupId>
+		<artifactId>itextpdf</artifactId>
+		<version>5.5.13.3</version>
+		</dependency>
+		<!-- For downloading pdfs  -->
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>2.0.25</version>
+		</dependency>
+		<!-- helps with string validation. Checks if it's null or not empty-->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>23.0</version>
+		</dependency>
+
+		<!-- helps with in manipulating json data. Used to convert Java Objects into their JSON representation. Can convert JSON string to an equivalent Java Object -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+
+		<!-- lightweight data-interchange format. This is the org.json compatible Android implementation extracted from the Android SDK -->
+		<dependency>
+			<groupId>com.vaadin.external.google</groupId>
+			<artifactId>android-json</artifactId>
+			<version>0.0.20131108.vaadin1</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- aggregates Spring Security-related dependencies. Provides authentication, authorization, and protection against common attacks. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+		</dependency>
+
+		<!-- defines a compact and self-contained way for securely transmitting information between parties as a JSON object -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
+		<!-- For sending mail. To reset passwords and what not -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+			<version>2.5.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+
+
+////////////////////////////////////////// OLD JWUTIL ////////////////////////////////////////////////////////
+
+
+package com.inn.cafe.JWT;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import java.security.Key;
+import javax.crypto.spec.SecretKeySpec;
+
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
+import java.util.Date;
+
+// For writing logic - understands we are going to write some logic
+@Service
+public class JwtUtil {
+
+    // Define a secret key that helps generate our web tokens
+    private String secret = "btechdays";
+
+    // Extract username from the token
+    public String extractUsername(String token){
+        return extractClaims(token, Claims::getSubject);
+    }
+
+    // Extract expiration time, see if you need to re-issue
+    public Date extractExpiration(String token){
+        return extractClaims(token, Claims::getExpiration);
+    }
+
+    // Extracts specific claims from a JWT token using a provided function claimsResolver
+    // token: The JWT token from which claims are to be extracted.
+    public <T> T extractClaims(String token, Function<Claims, T> claimsResolver){
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    // Method to return claims
+    public Claims extractAllClaims(String token){
+        //return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(secret.getBytes())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    // Method to check if a token is expired or not. Compare that expiry time with the time now.
+    private Boolean isTokenExpired(String token){
+        return extractExpiration(token).before(new Date());
+    }
+
+    // create a method to pass values to createToken
+    public String generateToken(String username, String role){
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role",role);
+        return  createToken(claims, username);
+    }
+
+    // Generate token with the help of a secret key, by passing claims and subjects
+    // Set this token so that it expires in 10 hours n-> System.currentTimeMillis() + 1000 * 60 * 60 * 10
+    private String createToken(Map<String, Object> claims, String subject){
+        Key key = new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS256.getJcaName());
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10 ))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+                //.signWith(SignatureAlgorithm.HS256, secret.getBytes()).compact();
+
+
+    }
+
+    // Let's validate a token
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+}
+
+////////////////////////////////////////// SERVICE IMPLEMENTATION ////////////////////////////////////////////////////////
+
+
+package com.inn.cafe.serviceImpl;
+
+import com.inn.cafe.JWT.CustomerUsersDetailsService;
+import com.inn.cafe.JWT.JwtFilter;
+import com.inn.cafe.JWT.JwtUtil;
+import com.inn.cafe.POJO.User;
+import com.inn.cafe.constants.CafeConstants;
+import com.inn.cafe.dao.UserDao;
+import com.inn.cafe.service.UserService;
+import com.inn.cafe.utils.CafeUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.Objects;
+
+// For login
+@Slf4j
+// Will use this class to write the business logic
+@Service
+public class UserServiceImpl implements UserService {
+
+    @Autowired
+    UserDao userDao;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    CustomerUsersDetailsService customerUsersDetailsService;
+
+    @Autowired
+    JwtUtil jwtUtil;
+
+    // This function 1st logs all the data that is available on request map then runs the logic
+    @Override
+    public ResponseEntity<String> signUp(Map<String, String> requestMap) {
+        log.info("Inside Signup {}", requestMap);
+        try {
+            if (validateSignUpMap(requestMap)) {
+                User user = userDao.findByEmailId(requestMap.get("email"));
+                // If you cannot find the user then register the user else return a statement that email already exists
+                if (Objects.isNull(user)) {
+                    // If the user doesn't exist then save the information on the database.
+                    userDao.save(getUserFromMap(requestMap));
+                    return CafeUtils.getResponseEntity("Successfully Registered", HttpStatus.OK);
+                } else {
+                    return CafeUtils.getResponseEntity("Email already exists", HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    //Validate login
+    private boolean validateSignUpMap(Map<String, String> requestMap){
+        if( requestMap.containsKey("name") && requestMap.containsKey("contactNumber")
+        && requestMap.containsKey("email") && requestMap.containsKey("password")){
+            return true;
+        }
+        return false;
+    }
+
+    // Extract the value from the map and set it to the user and return a user object
+    private User getUserFromMap(Map<String, String> requestMap){
+        User user = new User();
+        user.setName(requestMap.get("name"));
+        user.setContactNumber(requestMap.get("contactNumber"));
+        user.setEmail(requestMap.get("email"));
+        user.setPassword(requestMap.get("password"));
+        user.setStatus("false");
+        user.setRole("user");
+        return user;
+    }
+
+    /**
+     * @param requestMap
+     * @return
+     */
+    // HANDLES USER LOGIN
+    @Override
+    public ResponseEntity<String> login(Map<String, String> requestMap) {
+        log.info("inside login");
+        try{
+            // Extract the email and password
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(requestMap.get("email"), requestMap.get("password")));
+            if (auth.isAuthenticated()){
+                // After the user is authenticated, extract the user role
+                if(customerUsersDetailsService.getUserDetail().getStatus().equalsIgnoreCase("true")){ // means the user is actually approved.
+                    // After getting the user role, we generate the token using the method from jwtUtil
+                    // The tokens are generated from the user details; email and roles.
+                    return new ResponseEntity<String>("{\"token\":\""+
+                            jwtUtil.generateToken(customerUsersDetailsService.getUserDetail().getEmail(),
+                                    customerUsersDetailsService.getUserDetail().getRole())+"\"}",
+                    HttpStatus.OK);
+                }
+                // if the user is not approved, let the user know that they should wait for admin approval
+                else{
+                    return new ResponseEntity<String>("{\"message\":\""+"Wait for admin approval."+"\"}",
+                            HttpStatus.BAD_REQUEST);
+                }
+            }
+        } catch (Exception ex){
+            log.error("{}",ex);
+        }
+        return new ResponseEntity<String>("{\"message\":\""+"BAD CREDENTIALS."+"\"}",
+                HttpStatus.BAD_REQUEST);
+    }
+}
