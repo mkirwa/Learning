@@ -44,6 +44,12 @@ public class CustomerUsersDetailsService implements UserDetailsService {
 
     // Write another function that is going to return the user detail if we might need it
     public com.inn.cafe.POJO.User getUserDetail(){
+        // Returning a user such that you don't show user password.
+        // com.inn.cafe.POJO.User user = userDetail;
+        // user.setPassword(null);
+        // return user;
+        // But for our case we want to show the password for experimental purposes.
+        // by simply just passing all the data
         return userDetail;
     }
 
