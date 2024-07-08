@@ -88,3 +88,5 @@ Servlets are Java programs that run on a web server and handle requests from web
 3. Destruction: When the servlet is no longer needed, its destroy method is called for cleanup.
 
 If you want to see what a JWT token contains. copy and paste it in this site -> https://jwt.io/
+
+Alt Insert equivalent for mac -> command + N 
