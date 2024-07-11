@@ -16,6 +16,8 @@ public interface UserDao extends JpaRepository <User, Integer>{
 
     List<UserWrapper> getAllUser();
 
+    List<String> getAllAdmin();
+
     // To use update, you have to use transactional and modifying
     @Transactional
     @Modifying
