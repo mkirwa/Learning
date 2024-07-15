@@ -25,9 +25,21 @@ public interface UserRest {
     // APIs to get all the users and update the users. e.g. if we want to approve or reject the users
     // APIS to enable and disable accounts.
     // This is the interface and needs to be implemented in UserRestImpl
+    // Has issues and needs to be fixed!!!
     @GetMapping(path="/get")
     public ResponseEntity<List<UserWrapper>> getAllUser();
 
     @PostMapping(path="/update")
     public ResponseEntity<String> update(@RequestBody(required = true) Map<String, String>  requestMap);
+
+    @GetMapping(path="/checkToken")
+    ResponseEntity<String> checkToken();
+
+    @PostMapping(path="/changePassword")
+    ResponseEntity<String> changePassword(@RequestBody Map<String, String> requestMap);
+
+    // Has issues and needs to be fixed!!! Email not being sent!!
+    @PostMapping(path="/forgotPassword")
+    ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> requestMap);
+
 }

@@ -22,4 +22,8 @@ public interface UserDao extends JpaRepository <User, Integer>{
     @Transactional
     @Modifying
     Integer updateStatus(@Param("status") String status, @Param("id") Integer id);
+
+    // We don't need to implement this. It is already implemented in the background by JPA repository.
+    // email has been defined in user POJO
+    User findByEmail(String email);
 }
