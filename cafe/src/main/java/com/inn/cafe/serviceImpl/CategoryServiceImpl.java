@@ -1,6 +1,7 @@
 package com.inn.cafe.serviceImpl;
 
 import com.inn.cafe.JWT.JwtFilter;
+import com.inn.cafe.POJO.Category;
 import com.inn.cafe.constants.CafeConstants;
 import com.inn.cafe.dao.CategoryDao;
 import com.inn.cafe.service.CategoryService;
@@ -28,7 +29,10 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<String> addNewCategory(Map<String, String> requestMap) {
         try {
             if(jwtFilter.isAdmin()){
-
+                if(validateCategoryMap(requestMap, false)){
+                    categoryDao.save(getCategoryFromMap(requestMap, false));
+                    return CafeUtils.getResponseEntity("Category Added Successfully", HttpStatus.OK);
+                }
             } else{
                 return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
             }
@@ -36,5 +40,27 @@ public class CategoryServiceImpl implements CategoryService {
             ex.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private boolean validateCategoryMap(Map<String, String> requestMap, boolean validateId) {
+        // Checks for both name and id
+        if(requestMap.containsKey("name")){
+            if(requestMap.containsKey("id") && validateId){
+                return true;
+            } else if (!validateId){
+                return  true;
+            }
+        }
+        return false;
+    }
+
+    // Method to get the model
+    private Category getCategoryFromMap(Map<String, String> requestMap, Boolean isAdd){
+        Category category = new Category();
+        if(isAdd){
+            category.setId(Integer.parseInt(requestMap.get("id")));
+        }
+        category.setName(requestMap.get("name"));
+        return category;
     }
 }
