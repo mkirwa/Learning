@@ -1,6 +1,7 @@
 package com.inn.cafe.restImpl;
 
 import com.inn.cafe.constants.CafeConstants;
+import com.inn.cafe.rest.CategoryRest;
 import com.inn.cafe.rest.UserRest;
 import com.inn.cafe.service.UserService;
 import com.inn.cafe.utils.CafeUtils;
@@ -113,4 +114,6 @@ public class UserRestImpl implements UserRest {
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    public static class CategoryRestImpl implements CategoryRest {
+    }
 }
