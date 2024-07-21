@@ -8,7 +8,8 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
 
-@NamedQuery(name="Category.getAllCategory", query = "select c from category c")
+// C has to be capital because Category is from the public class declared below.
+@NamedQuery(name="Category.getAllCategory", query = "select c from Category c")
 
 @Data
 @Entity
