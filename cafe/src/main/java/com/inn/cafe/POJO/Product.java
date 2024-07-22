@@ -7,6 +7,9 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
 
+// We are using  p.category.id, p.category.name as we can access these values from category object which has an id and name - refer to Category.class POJO.
+@NamedQuery(name="Product.getAllProduct", query="select new com.inn.cafe.wrapper.ProductWrapper(p.id, p.name, p.description, p.price, p.status, p.category.id, p.category.name) from Product p")
+
 @Data
 @Entity
 @DynamicUpdate

@@ -7,12 +7,16 @@ import com.inn.cafe.constants.CafeConstants;
 import com.inn.cafe.dao.ProductDao;
 import com.inn.cafe.service.ProductService;
 import com.inn.cafe.utils.CafeUtils;
+import com.inn.cafe.wrapper.ProductWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 // Service because we will put business logic here
 @Service
@@ -76,5 +80,56 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(requestMap.get("description"));
         product.setPrice(Integer.parseInt(requestMap.get("price")));
         return product;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public ResponseEntity<List<ProductWrapper>> getAllProduct() {
+        try{
+           return new ResponseEntity<>(productDao.getAllProduct(), HttpStatus.OK);
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param requestMap
+     * @return
+     */
+    @Override
+    public ResponseEntity<String> updateProduct(Map<String, String> requestMap) {
+        try{
+            if(jwtFilter.isAdmin()){
+                // Validate the request map - that the request map contains id and the name of the particular product
+                // If not, you don't have all the needed data
+                if(validateProductMap(requestMap, true)){
+                    // Fetch product from the database with the help of the id.
+                    // Make sure it exists. If it does, fetch the id
+                    Optional<Product> optional = productDao.findById(Integer.parseInt(requestMap.get("id")));
+                    //Check if optional is empty
+                    if(!optional.isEmpty()){
+                        // Parsing true sets the id for this product. Create a product object from it.
+                        // After creating the product object, we set the product status
+                        Product product = getProductFromMap(requestMap, true);
+                        // Set the status of the product
+                        product.setStatus(optional.get().getStatus());
+                        productDao.save(product);
+                        return CafeUtils.getResponseEntity("Product Updated Successfully", HttpStatus.OK);
+                    } else {
+                        return CafeUtils.getResponseEntity("Product id does not exist.", HttpStatus.OK);
+                    }
+                } else {
+                    return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
