@@ -9,7 +9,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.io.Serializable;
 
 // C has to be capital because Category is from the public class declared below.
-@NamedQuery(name="Category.getAllCategory", query = "select c from Category c")
+// select p.category from Product p where p.status='true" -> Extact all categories that exist in a product where the product status is true
+// If you have a product whose status is true, it will extract that one
+@NamedQuery(name="Category.getAllCategory", query = "select c from Category c where c.id in (select p.category.id from Product p where p.status='true')")
 
 @Data
 @Entity
