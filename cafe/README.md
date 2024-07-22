@@ -90,3 +90,8 @@ Servlets are Java programs that run on a web server and handle requests from web
 If you want to see what a JWT token contains. copy and paste it in this site -> https://jwt.io/
 
 Alt Insert equivalent for mac -> command + N 
+
+Database query to show a query that created the table - shows how the table is created in spring boot.
+```dockerfile
+show create table product;
+```
