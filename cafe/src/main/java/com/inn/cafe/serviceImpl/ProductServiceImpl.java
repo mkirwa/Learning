@@ -8,6 +8,8 @@ import com.inn.cafe.dao.ProductDao;
 import com.inn.cafe.service.ProductService;
 import com.inn.cafe.utils.CafeUtils;
 import com.inn.cafe.wrapper.ProductWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import java.util.Optional;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
     @Autowired
     ProductDao productDao;
 
@@ -139,11 +142,12 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public ResponseEntity<String> deleteProduct(Integer id) {
+        log.info("DO I EVEN GET HERE???");
         try{
             if(jwtFilter.isAdmin()){
                     // Fetch product from the database with the help of the id.
                     // Make sure it exists. If it does, fetch the id
-                    Optional optional = productDao.findById((id));
+                    Optional optional = productDao.findById(id);
                     //Check if optional is empty
                     if(!optional.isEmpty()){
                         productDao.deleteById(id);
