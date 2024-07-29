@@ -35,4 +35,11 @@ public class ProductWrapper {
 
     }
 
+    // This constructor belongs to the @Named Query to get the product by ID
+    // The reason we have a new constructor is because we are getting new select statements.
+    public ProductWrapper(Integer id, String name){
+        this.id = id;
+        this.name= name;
+    }
+
 }
