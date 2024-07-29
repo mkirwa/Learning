@@ -42,4 +42,12 @@ public class ProductWrapper {
         this.name= name;
     }
 
+    // Creating a wrapper for a @named query for the database.
+    public ProductWrapper(Integer id, String name, String description, Integer price){
+        this.id = id;
+        this.name= name;
+        this.description = description;
+        this.price = price;
+    }
+
 }
