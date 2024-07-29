@@ -170,6 +170,25 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public ResponseEntity<String> updateStatus(Map<String, String> requestMap) {
+        try{
+            if(jwtFilter.isAdmin()){
+                // Fetch product from the database with the help of the id.
+                // Make sure it exists. If it does, fetch the id
+                Optional optional = productDao.findById(Integer.parseInt(requestMap.get("id")));
+                //Check if optional is empty
+                if(!optional.isEmpty()){
+                    productDao.updateProductStatus(requestMap.get("status"),Integer.parseInt(requestMap.get("id")));
+                    return CafeUtils.getResponseEntity("Product Deleted Successfully", HttpStatus.OK);
+                } else {
+                    return CafeUtils.getResponseEntity("Product id does not exist.", HttpStatus.OK);
+                }
+
+            } else {
+                return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
