@@ -142,7 +142,6 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public ResponseEntity<String> deleteProduct(Integer id) {
-        log.info("DO I EVEN GET HERE???");
         try{
             if(jwtFilter.isAdmin()){
                     // Fetch product from the database with the help of the id.
@@ -162,6 +161,15 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception ex){
             ex.printStackTrace();
         }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param requestMap
+     * @return
+     */
+    @Override
+    public ResponseEntity<String> updateStatus(Map<String, String> requestMap) {
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
