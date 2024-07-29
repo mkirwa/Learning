@@ -191,4 +191,18 @@ public class ProductServiceImpl implements ProductService {
         }
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    /**
+     * @param id
+     * @return
+     */
+    @Override
+    public ResponseEntity<List<ProductWrapper>> getByCategory(Integer id) {
+        try{
+            return new ResponseEntity<>(productDao.getProductByCategory(id), HttpStatus.OK);
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
