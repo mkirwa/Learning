@@ -10,6 +10,10 @@ import java.io.Serializable;
 // We are using  p.category.id, p.category.name as we can access these values from category object which has an id and name - refer to Category.class POJO.
 @NamedQuery(name="Product.getAllProduct", query="select new com.inn.cafe.wrapper.ProductWrapper(p.id, p.name, p.description, p.price, p.status, p.category.id, p.category.name) from Product p")
 
+// Make sure that status is spelled exactly as private String status; below.
+// The id in p.id=:id should match the fields in productDao i.e Integer updateProductStatus(@Param("status") String status, @Param("id") Integer id);
+@NamedQuery(name="Product.updateProductStatus", query="update Product p set p.status=:status where p.id=:id")
+
 @Data
 @Entity
 @DynamicUpdate
