@@ -14,7 +14,7 @@ import java.io.Serializable;
 // The id in p.id=:id should match the fields in productDao i.e. Integer updateProductStatus(@Param("status") String status, @Param("id") Integer id);
 @NamedQuery(name="Product.updateProductStatus", query="update Product p set p.status=:status where p.id=:id")
 
-@NamedQuery(name="Product.getProductByCategory", query="select new com.inn.cafe.wrapper.ProductWrapper(p.id, p.name) from Product p where p.category.id=:id and p.status='true")
+@NamedQuery(name="Product.getProductByCategory", query="select new com.inn.cafe.wrapper.ProductWrapper(p.id, p.name) from Product p where p.category.id=:id and p.status='true'")
 
 @Data
 @Entity
