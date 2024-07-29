@@ -95,3 +95,11 @@ Database query to show a query that created the table - shows how the table is c
 ```dockerfile
 show create table product;
 ```
+### Generating PDF ###
+#### APIs to Generate PDF ####
+- We are rendering data in form of UI
+- We take this data and generate a pdf out of it 
+- Store it in a place and update the db then return tue uui i.e. the build id. 
+#### Classes and code involved #####
+- POJO  'Bill' implements serializable 
+  - fghdghghdgh
