@@ -8,16 +8,19 @@ import com.inn.cafe.dao.BillDao;
 import com.inn.cafe.service.BillService;
 import com.inn.cafe.utils.CafeUtils;
 import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -70,8 +73,6 @@ public class BillServiceImpl implements BillService {
                 PdfPTable table = new PdfPTable(5);
                 // Adding header to the tables
                 addTableHeader(table);
-
-
             } else {
                 return CafeUtils.getResponseEntity("Required data not found.", HttpStatus.BAD_REQUEST);
             }
@@ -80,6 +81,21 @@ public class BillServiceImpl implements BillService {
             ex.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private void addTableHeader(PdfPTable table) {
+        log.info("Inside addTableHeader");
+        Stream.of("Name", "Category", "Quantity","Price","Sub Total")
+                // This loops and creates the respective columns from Name to Category to Quantity e.t.c.
+                .forEach(columnTitle->{
+                    PdfPCell header = new PdfPCell();
+                    header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                    header.setBorderWidth(2);
+                    header.setPhrase(new Phrase(columnTitle));
+                    header.setBackgroundColor(BaseColor.YELLOW);
+                    header.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    header.setVerticalAlignment(Element.ALIGN_CENTER);
+                });
     }
 
     private Font getFont(String type) {
