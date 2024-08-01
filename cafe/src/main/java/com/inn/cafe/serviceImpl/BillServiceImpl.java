@@ -11,6 +11,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @Slf4j
+@Data
 @Service
 public class BillServiceImpl implements BillService {
     @Autowired
@@ -79,8 +81,15 @@ public class BillServiceImpl implements BillService {
 
                 // Loop to add rows into data tables
                 for(int i = 0; i <jsonArray.length(); i++){
-
+                    addRows(table, CafeUtils.getMapFromJson(jsonArray.getString(i)));
                 }
+                document.add(table);
+
+                Paragraph footer = new Paragraph("Total: "+requestMap.get("totalAmount")+"\n"
+                + "Thank you for visiting. Please visit again!!", getFont("Data"));
+
+                document.add(footer);
+                document.close();
 
             } else {
                 return CafeUtils.getResponseEntity("Required data not found.", HttpStatus.BAD_REQUEST);
@@ -90,6 +99,15 @@ public class BillServiceImpl implements BillService {
             ex.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private void addRows(PdfPTable table, Map<String, Object> data) {
+        log.info("Inside addRows");
+        table.addCell((String) data.get("name"));
+        table.addCell((String) data.get("category"));
+        table.addCell((String) data.get("quantity"));
+        table.addCell(Double.toString((Double)data.get("price")));
+        table.addCell(Double.toString((Double)data.get("total")));
     }
 
     private void addTableHeader(PdfPTable table) {
