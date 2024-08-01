@@ -4,7 +4,6 @@
 
 ```
 mysql -u root -p
-password = password
 ```
 
 ## Packages ##
