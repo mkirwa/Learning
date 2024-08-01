@@ -65,10 +65,12 @@ public class BillServiceImpl implements BillService {
                 document.open();
                 setRectangleInPdf(document);
 
+                // placing the header into the document
                 Paragraph chunk = new Paragraph("Cafe Management System", getFont("Header"));
                 chunk.setAlignment(Element.ALIGN_CENTER);
                 document.add(chunk);
 
+                // Adding a paragraph
                 Paragraph paragraph = new Paragraph(data + "\n \n ", getFont("Data"));
                 document.add(paragraph);
 
@@ -90,6 +92,8 @@ public class BillServiceImpl implements BillService {
 
                 document.add(footer);
                 document.close();
+
+                return new ResponseEntity<>("{\"uuid\":\"" + fileName + "\"}", HttpStatus.OK);
 
             } else {
                 return CafeUtils.getResponseEntity("Required data not found.", HttpStatus.BAD_REQUEST);
