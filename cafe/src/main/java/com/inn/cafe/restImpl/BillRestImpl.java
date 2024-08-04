@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+// Creates restful web service...
+// Redirects the api to implement the logic here.
 @RestController
 public class BillRestImpl implements BillRest {
     private static final Logger log = LoggerFactory.getLogger(BillRestImpl.class);
@@ -24,28 +26,9 @@ public class BillRestImpl implements BillRest {
      */
     @Override
     public ResponseEntity<String> generateReport(Map<String, Object> requestMap) {
-        log.info("DO I EVER GET HERE AT ALL?? 56565656");
-        log.info("DO I EVER GET HERE AT ALL?? 56565656");
-
-        log.info("DO I EVER GET HERE AT ALL?? 56565656");
-
-        log.info("DO I EVER GET HERE AT ALL?? 56565656");
-
-        log.info("DO I EVER GET HERE AT ALL?? 56565656");
-        log.info("DO I EVER GET HERE AT ALL?? 56565656");
-        log.info("DO I EVER GET HERE AT ALL?? 56565656");
-
         try{
-            log.info("DO I EVER GET HERE AT ALL??");
-            log.info("DO I EVER GET HERE AT ALL??");
-            log.info("DO I EVER GET HERE AT ALL??");
-            log.info("DO I EVER GET HERE AT ALL??");
-            log.info("DO I EVER GET HERE AT ALL??");
-            log.info("DO I EVER GET HERE AT ALL??");
-
             return billService.generateReport(requestMap);
         } catch (Exception ex){
-            log.info("DO I EVER GET HERE AT ALL 2222222 22222??");
             ex.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);

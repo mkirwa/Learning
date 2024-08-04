@@ -153,7 +153,7 @@ public class BillServiceImpl implements BillService {
         rect.enableBorderSide(2);
         rect.enableBorderSide(4);
         rect.enableBorderSide(8);
-        rect.setBackgroundColor(BaseColor.BLACK);
+        rect.setBorderColor(BaseColor.BLACK);
         rect.setBorderWidth(1);
         document.add(rect);
     }
