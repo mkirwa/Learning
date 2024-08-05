@@ -7,6 +7,9 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
 
+@NamedQuery(name="Bill.getAllBills", query = "select b from Bill b order by b.id desc")
+@NamedQuery(name="Bill.getBillsByUserName", query =  "")
+
 @Data
 @Entity
 @DynamicUpdate
