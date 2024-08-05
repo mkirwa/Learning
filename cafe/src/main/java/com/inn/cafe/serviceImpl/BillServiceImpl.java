@@ -21,6 +21,8 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -105,6 +107,8 @@ public class BillServiceImpl implements BillService {
         return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+
+
     private void addRows(PdfPTable table, Map<String, Object> data) {
         log.info("Inside addRows");
         table.addCell((String) data.get("name"));
@@ -182,5 +186,21 @@ public class BillServiceImpl implements BillService {
                 requestMap.containsKey("paymentMethod") &&
                 requestMap.containsKey("productDetails") &&
                 requestMap.containsKey("totalAmount");
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public ResponseEntity<List<Bill>> getBills() {
+        List<Bill> list = new ArrayList<>();
+        if(jwtFilter.isAdmin()){
+            // if the user is an admin, return all bills
+            list = billDao.getAllBills();
+        } else {
+            // if the user is not an admin, just return bills for that particular user alone.
+            list = billDao.getBillsByUserName(jwtFilter.getCurrentUser());
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }
