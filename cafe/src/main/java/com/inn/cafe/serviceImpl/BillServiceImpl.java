@@ -224,7 +224,7 @@ public class BillServiceImpl implements BillService {
             if(!requestMap.containsKey("uuid") && validateRequestMap(requestMap)){
                 return new ResponseEntity<>(byteArray, HttpStatus.BAD_REQUEST);
             }
-            String filePath = CafeConstants.STORE_LOCATION + "\\" + (String) requestMap.get("uuid") + ".pdf";
+            String filePath = CafeConstants.STORE_LOCATION + "//" + (String) requestMap.get("uuid") + ".pdf";
             if(CafeUtils.isFileExist(filePath)){
                 byteArray = getByteArray(filePath);
                 return new ResponseEntity<>(byteArray, HttpStatus.OK);
