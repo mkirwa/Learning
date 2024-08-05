@@ -20,5 +20,5 @@ public interface BillRest {
     ResponseEntity<byte[]> getPdf(@RequestBody Map<String, Object> requestMap);
 
     @PostMapping(path = "/delete/{id}")
-    ResponseEntity<byte[]> deleteBill(@PathVariable Integer id);
+    ResponseEntity<String> deleteBill(@PathVariable Integer id);
 }
