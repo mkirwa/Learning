@@ -117,8 +117,8 @@ show create table product;
 ### App ###
 
 - app-routing.module.ts -> 
-- app.component.html -> 
-- app.component.scss ->
+- app.component.html -> html file for the component. 
+- app.component.scss -> css files for the component. 
 - app.component.spect.ts -> 
 - app.component.ts -> 
 - app.module.ts -> MAIN Module of the project
