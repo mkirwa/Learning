@@ -102,3 +102,23 @@ show create table product;
 #### Classes and code involved #####
 - POJO  'Bill' implements serializable 
   - fghdghghdgh
+
+
+## Angular JS ##
+- npm i installs the dependencies from package.json and creates node_modules.
+
+- Environments Folder -> URL for the apis go here. 
+- Assets -> All the images go here that are being used by the application. 
+- App -> Contains app modules. 
+
+- index.html -> the main file of the application. 
+- style.scss -> defines all the common css files. 
+
+### App ###
+
+- app-routing.module.ts -> 
+- app.component.html -> 
+- app.component.scss ->
+- app.component.spect.ts -> 
+- app.component.ts -> 
+- app.module.ts -> MAIN Module of the project
