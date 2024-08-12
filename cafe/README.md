@@ -122,3 +122,9 @@ show create table product;
 - app.component.spect.ts -> 
 - app.component.ts -> 
 - app.module.ts -> MAIN Module of the project
+
+### TYPESCRIPT ###
+
+-  It is a superset of JavaScript, which means it extends JavaScript by adding new features, primarily static typing - Static typing is a feature in programming languages where the type of a variable is known and checked at compile-time, rather than at runtime. TypeScript is designed to develop large-scale applications and transcompiles to plain JavaScript, ensuring compatibility with existing JavaScript code and environments.
+
+
