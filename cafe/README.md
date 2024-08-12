@@ -146,3 +146,72 @@ show create table product;
 ### Services ###
 
 - Folder for linking services to front end. 
+
+- The command `ng g s user` in an Angular project is a shorthand for generating a new service using the Angular CLI. Here's what each part of the command does:
+
+- `ng` : This is the Angular CLI command. It allows you to interact with Angular's command-line interface.
+
+- `g`: This stands for generate. It's a command that tells Angular CLI to create a new file or set of files for a specific Angular feature.
+
+- `s` : This is shorthand for service. It tells Angular CLI to generate a new service.
+
+- `user` : This is the name of the service you want to generate. In this case, a service called UserService will be created.
+
+#### What Happens When You Run ng g s user? ####
+
+- File Creation:
+
+- Angular CLI generates two files:
+  - user.service.ts: The TypeScript file containing the UserService class. This is where you'll define the service logic.
+  - user.service.spec.ts: The accompanying test file for the service, used for writing unit tests.
+
+#### Service Class: ####
+
+- The generated user.service.ts file will include a basic service class, typically with the @Injectable() decorator, which makes the service injectable into other components or services in your application.
+
+- Example content of user.service.ts:
+
+```typescript
+
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserService {
+
+  constructor() { }
+
+}
+
+```
+
+- The providedIn: 'root' setting means that this service is available as a singleton across the entire application.
+
+#### Unit Testing: ####
+
+- The user.service.spec.ts file is a test suite generated to help you write unit tests for your service. It uses Jasmine and Angular's testing utilities.
+
+#### Usage ####
+
+- Once generated, you can inject the UserService into any component or other service where you need to use it:
+
+```typescript
+import { UserService } from './user.service';
+
+@Component({
+  selector: 'app-example',
+  templateUrl: './example.component.html',
+  styleUrls: ['./example.component.css']
+})
+export class ExampleComponent {
+
+  constructor(private userService: UserService) {
+    // Now you can use userService in this component
+  }
+
+}
+```
+
+#### Summary ####
+- The ng g s user command is a convenient way to quickly create a new service in your Angular project, complete with a basic setup and testing file. This service can then be used to manage and encapsulate specific logic, making it easier to maintain and test your application.
