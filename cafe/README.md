@@ -215,3 +215,7 @@ export class ExampleComponent {
 
 #### Summary ####
 - The ng g s user command is a convenient way to quickly create a new service in your Angular project, complete with a basic setup and testing file. This service can then be used to manage and encapsulate specific logic, making it easier to maintain and test your application.
+
+#### Material Component ####
+
+- All Angular component materials used by the application, for example what is used for the user dialog feature. material-module.ts file contains all these components.  
