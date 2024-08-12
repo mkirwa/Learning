@@ -127,4 +127,22 @@ show create table product;
 
 -  It is a superset of JavaScript, which means it extends JavaScript by adding new features, primarily static typing - Static typing is a feature in programming languages where the type of a variable is known and checked at compile-time, rather than at runtime. TypeScript is designed to develop large-scale applications and transcompiles to plain JavaScript, ensuring compatibility with existing JavaScript code and environments.
 
+### best-seller ###
 
+- Contains home-page app
+
+### dashboard ###
+
+- Dashboard app 
+
+### layouts ###
+
+- Contains the layout for the application. 
+
+### Environments ###
+
+- environment.ts -> Adding the urls for the apis. 
+
+### Services ###
+
+- Folder for linking services to front end. 

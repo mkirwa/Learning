@@ -14,6 +14,9 @@ import { FullComponent } from './layouts/full/full.component';
 import { AppHeaderComponent } from './layouts/full/header/header.component';
 import { AppSidebarComponent } from './layouts/full/sidebar/sidebar.component';
 
+// Importing http client module for making http requests to the backend api
+import {HttpClientModule} from '@angular/common/http';
+
 @NgModule({
   declarations: [	
     AppComponent,
