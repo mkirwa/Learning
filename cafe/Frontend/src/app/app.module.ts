@@ -16,6 +16,7 @@ import { AppSidebarComponent } from './layouts/full/sidebar/sidebar.component';
 
 // Importing http client module for making http requests to the backend api
 import {HttpClientModule} from '@angular/common/http';
+import { SignupComponent } from './signup/signup.component';
 
 @NgModule({
   declarations: [	
@@ -24,7 +25,8 @@ import {HttpClientModule} from '@angular/common/http';
     BestSellerComponent,
     FullComponent,
     AppHeaderComponent,
-    AppSidebarComponent
+    AppSidebarComponent,
+    SignupComponent
    ],
   imports: [
     BrowserModule,
