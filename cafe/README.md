@@ -322,3 +322,93 @@ public class LoginController {
 ### Unit Test for Backend (JUnit) ###
 Here’s a unit test for the login method in the LoginService class:
 
+```java
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import java.util.Optional;
+
+public class LoginServiceTest {
+
+    @InjectMocks
+    private LoginService loginService;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testLoginThrowsUserNotFoundExceptionWhenUserNotFound() {
+        // Arrange
+        String userId = "testUser";
+        when(userRepository.findByUserId(userId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(UserNotFoundException.class, () -> loginService.login(userId), 
+            "User is not in the database, " + userId);
+    }
+}
+
+```
+### Frontend (AngularJS) ###
+
+- On the frontend, you’ll make a call to the login API and handle the error when the user is not found.
+
+#### AngularJS Service ####
+
+```javascript
+app.service('loginService', function($http, $q) {
+    this.login = function(userId) {
+        return $http.post('/api/login', { userId: userId })
+            .catch(function(response) {
+                if (response.status === 404) {
+                    // Handle not found error
+                    alert('User is not in the database, ' + userId);
+                }
+                return $q.reject(response);
+            });
+    };
+});
+
+```
+
+### AngularJS Controller ###
+
+- You can then call the loginService in your controller.
+
+```javascript
+app.controller('LoginController', function($scope, loginService) {
+    $scope.login = function() {
+        loginService.login($scope.userId)
+            .then(function(response) {
+                // Handle successful login
+                console.log('Login successful:', response.data);
+            })
+            .catch(function(error) {
+                // Error handling is done in the service
+            });
+    };
+});
+
+```
+
+### Explanation: ###
+#### Backend: ####
+
+- `LoginService:` Checks if the user exists in the database. If not, it throws a UserNotFoundException with a message containing the user ID.
+- `LoginController:` Exposes an endpoint to handle login requests. It catches the UserNotFoundException and returns a 404 Not Found response with the error message.
+LoginServiceTest: Verifies that the UserNotFoundException is thrown when the user isn't found in the database.
+Frontend (AngularJS):
+
+loginService: Makes a POST request to the /api/login endpoint. If the backend responds with a 404 Not Found error, it alerts the user with the message "User is not in the database, userid".
+LoginController: Invokes the loginService and handles the login process.
+This setup ensures that if a user isn’t found in the database, the backend throws an exception, and the frontend properly handles it by showing a user-friendly message. Let me know if you need further modifications!
