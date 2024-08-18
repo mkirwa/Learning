@@ -219,3 +219,106 @@ export class ExampleComponent {
 #### Material Component ####
 
 - All Angular component materials used by the application, for example what is used for the user dialog feature. material-module.ts file contains all these components.  
+
+
+## JAVA UNIT TESTS ##
+
+- you can use JUnit and Mockito (or another mocking framework). Here's a basic guide on how you can do this:
+
+### SETUP YOUR TESTING ENVIRONMENT ###
+
+Ensure you have the necessary dependencies in your pom.xml (for Maven) or build.gradle (for Gradle) for JUnit and Mockito.
+
+#### MAVEN ####
+
+```xml
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-api</artifactId>
+    <version>5.7.0</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-core</artifactId>
+    <version>3.6.0</version>
+    <scope>test</scope>
+</dependency>
+
+```
+#### GROOVY ####
+
+```groovy
+testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+testImplementation 'org.mockito:mockito-core:3.6.0'
+```
+### EXAMPLE ###
+
+- Let's go through an example of a login API that checks if a specific user exists in the `cafe` database in the `usersTable`. 
+- If the user is not found, we'll throw an exception on the backend, and the AngularJS frontend will catch that exception and handle it appropriately.
+- Handles it appropriately by showing a message like "user is not in the database, userid".
+
+#### Backend (Java) ####
+
+- First, we need to define the login API in the service layer, repository, and exception handling.
+
+1. Service Class (LoginService)
+   - This service class will check if the user exists in the usersTable.
+
+```java
+@Service
+public class LoginService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public User login(String userId) {
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new UserNotFoundException("User is not in the database, " + userId));
+    }
+}
+```
+2. Repository Interface (UserRepository)
+   - This repository will query the usersTable in the cafe database.
+   
+```java
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByUserId(String userId);
+}
+```
+3. Custom Exception Class (UserNotFoundException)
+   - This custom exception will be thrown when the user is not found in the database.
+```java
+public class UserNotFoundException extends RuntimeException {
+    public UserNotFoundException(String message) {
+        super(message);
+    }
+}
+```
+4. Controller Class (LoginController)
+   - The controller handles the HTTP request and response for the login API.
+
+```java
+@RestController
+@RequestMapping("/api")
+public class LoginController {
+
+    @Autowired
+    private LoginService loginService;
+
+    @PostMapping("/login")
+    public ResponseEntity<User> loginUser(@RequestParam String userId) {
+        User user = loginService.login(userId);
+        return ResponseEntity.ok(user);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+}
+```
+### Unit Test for Backend (JUnit) ###
+Here’s a unit test for the login method in the LoginService class:
+
