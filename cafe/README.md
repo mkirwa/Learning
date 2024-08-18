@@ -405,10 +405,13 @@ app.controller('LoginController', function($scope, loginService) {
 #### Backend: ####
 
 - `LoginService:` Checks if the user exists in the database. If not, it throws a UserNotFoundException with a message containing the user ID.
-- `LoginController:` Exposes an endpoint to handle login requests. It catches the UserNotFoundException and returns a 404 Not Found response with the error message.
-LoginServiceTest: Verifies that the UserNotFoundException is thrown when the user isn't found in the database.
-Frontend (AngularJS):
+- `LoginController:` Exposes an endpoint to handle login requests. It catches the `UserNotFoundException` and returns a `404 Not Found` response with the error message.
+- `LoginServiceTest:` Verifies that the `UserNotFoundException` is thrown when the user isn't found in the database.
 
-loginService: Makes a POST request to the /api/login endpoint. If the backend responds with a 404 Not Found error, it alerts the user with the message "User is not in the database, userid".
-LoginController: Invokes the loginService and handles the login process.
-This setup ensures that if a user isn’t found in the database, the backend throws an exception, and the frontend properly handles it by showing a user-friendly message. Let me know if you need further modifications!
+#### Frontend (AngularJS): ####
+
+- `loginService:` Makes a POST request to the `/api/login` endpoint. If the backend responds with a `404 Not Found` error, it alerts the user with the message `"User is not in the database, userid".`
+- `LoginController:` Invokes the `loginService` and handles the login process.
+
+- This setup ensures that if a user isn’t found in the database, the backend throws an exception, and the frontend properly handles it by showing a user-friendly message.
+
