@@ -10,7 +10,9 @@ File: scss
 $bodyfont: 'Poppins', sans-serif;
 $headingfont: 'Poppins', sans-serif;
 
-@import '~@angular/material/theming';
+@import '~@angular/material/_theming.scss';
+
+
 
 /*Material Theme Colors*/
 
