@@ -33,5 +33,4 @@ build/
 .vscode/
 
 ### Angular ###
-node_modules/
-cafe/FrontEnd/.angular/cache/
+cafe/Frontend/.angular/
