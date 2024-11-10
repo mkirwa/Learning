@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### Angular ###
-cafe/Frontend/.angular/
+/.angular/
