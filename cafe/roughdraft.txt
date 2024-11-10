@@ -762,3 +762,5 @@ public class UserServiceImpl implements UserService {
     "webpack": "^5.93.0"
   }
 }
+
+## What does this do?
