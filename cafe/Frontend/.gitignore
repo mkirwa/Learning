@@ -46,4 +46,4 @@ testem.log
 Thumbs.db
 
 # Ignore Cache Files #
-.angular/cache/
+/angular/cache/
