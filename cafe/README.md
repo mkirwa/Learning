@@ -415,3 +415,9 @@ app.controller('LoginController', function($scope, loginService) {
 
 - This setup ensures that if a user isn’t found in the database, the backend throws an exception, and the frontend properly handles it by showing a user-friendly message.
 
+### QUICK COMMANDS ###
+#### Cleaning the Repo ####
+```
+ng cache clean
+```
+- Use the above command if your changes aren't being detected. 

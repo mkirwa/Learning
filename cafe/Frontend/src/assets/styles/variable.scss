@@ -1,23 +1,56 @@
+// Define custom variables
+$blue: #2196F3;  // A standard blue color
+$purple: #9c27b0;  // A standard purple color
+$primary: #007bff;  // Define the primary color
+$megna: #00bcd4;  // Define the megna color
+$light-primary: lighten($primary, 30%);  // Lightened primary color for backgrounds
+$bodyfont: 'Poppins', sans-serif;
+$headingfont: 'Roboto', sans-serif;  // Add the heading font here
+$bodytext: #333333;  // Define $bodytext color
+$inverse: #f0f0f0;  // Define the inverse color for the background
+$white: #ffffff;  // Pure white color
+$headingtext: #222222;
+$themecolor: #007bff;  // Define $themecolor (example: blue primary color)
+$radius: 8px;  // Define the $radius variable (adjust the value as needed)
+$danger: #f44336;  // Define $danger as red (commonly used for error messages, alerts, etc.)
+$light-danger: lighten($danger, 30%);  // Lightened red color for backgrounds
+$border: #e0e0e0;  // Define border color (or border style/width if needed)
+$muted: #9e9e9e;  // Define muted color (gray tone for muted text)
+$warning: #ff9800;  // Yellow-orange color for warning
+$success: #4caf50;  // Green color for success
+$light-success: lighten($success, 30%);  // Lightened green color for backgrounds
+$info: #2196F3;  // Blue color for info (can adjust as needed)
+$light-info: lighten($info, 30%);  // Lightened blue color for backgrounds
+$extra-light: #f8f9fa;  // A very light gray color for background, etc.
+$light-warning: lighten($warning, 30%);  // Lightened yellow-orange color for backgrounds
+$light-inverse: #f4f4f4;  // Light gray color for inverse backgrounds
+$light: #f5f5f5;  // Light gray color for background, etc.
+
+// Define font size variables
+$font-16: 16px;  // Define $font-16 as 16px
+
+$font-14: 14px;  // Additional font sizes if needed
+$font-18: 18px;
+$font-20: 20px;
+
+$bodycolor: #f5f5f5;  // Define the body color
+$sidebar-text: #333333;  // Define the sidebar text color
+$sidebar-icons: #9e9e9e;  // Define the sidebar icons color
+$themecolor-alt: #007bff;  // Define the alternate theme color
+
 @use '@angular/material' as mat;
-
-// Define color palettes
-$primary: mat.define-palette(mat.$purple-palette, 600);  // Access color palette directly
-$accent: mat.define-palette(mat.$purple-palette, 500);
-$warn: mat.red(500);
-
-// Define theme
-$theme: mat.light-theme($primary, $accent, $warn);
-
-// Apply the core styles
 @include mat.core();
 
-// Custom typography config
-$custom-typography: mat.typography-config(
-  $font-family: 'Poppins, sans-serif'
-);
+$myapp-theme-primary: mat.m2-define-palette(mat.$m2-indigo-palette, A400, A100, A700);
+$myapp-theme-accent: mat.m2-define-palette(mat.$m2-indigo-palette);
+$myapp-theme-warn: mat.m2-define-palette(mat.$m2-red-palette);
 
-// Include core styles and typography
-@include mat.core($custom-typography);
+$myapp-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $myapp-theme-primary,
+    accent: $myapp-theme-accent,
+    warn: $myapp-theme-warn,
+  )
+));
 
-// Default theme inclusion
-@include mat.all-component-themes($theme);
+@include mat.all-component-themes($myapp-theme);
