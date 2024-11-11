@@ -421,3 +421,25 @@ app.controller('LoginController', function($scope, loginService) {
 ng cache clean
 ```
 - Use the above command if your changes aren't being detected. 
+#### If you get the following commit error from angular, fix it like so ####
+```bash
+Enumerating objects: 449, done.
+Counting objects: 100% (449/449), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (376/376), done.
+Writing objects: 100% (431/431), 28.29 MiB | 4.96 MiB/s, done.
+Total 431 (delta 63), reused 416 (delta 48)
+remote: Resolving deltas: 100% (63/63), completed with 16 local objects.
+remote: error: Trace: f1799469b5552d9415bf07be98b8fd64a16411f1c6aaed128bcc549f797629c1
+remote: error: See https://gh.io/lfs for more information.
+remote: error: File cafe/Frontend/.angular/cache/18.0.7/angular-webpack/cd08257bb882acc3a5f3e480eb03ed46e35ce709/0.pack is 110.63 MB; this exceeds GitHub's file size limit of 100.00 MB
+remote: error: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.
+To https://github.com/mkirwa/Learning.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'https://github.com/mkirwa/Learning.git'
+```
+- The fix 
+```bash
+git filter-repo --strip-blobs-bigger-than 2M
+git push --force 
+```
