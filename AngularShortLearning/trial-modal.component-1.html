@@ -1,0 +1,15 @@
+<div class="modal">
+  <h2>Select Options</h2>
+  <form [formGroup]="formGroup">
+    <ng-multiselect-dropdown
+      [placeholder]="'Select options'"
+      [data]="options"
+      [(ngModel)]="selectedValues"
+      [settings]="dropdownSettings"
+      (onSelect)="onItemSelect($event)"
+      (onDeSelect)="onItemDeselect($event)"
+    >
+    </ng-multiselect-dropdown>
+  </form>
+  <button mat-raised-button color="primary" (click)="save()">Save</button>
+</div>
