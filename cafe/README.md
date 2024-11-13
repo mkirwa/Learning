@@ -443,3 +443,5 @@ error: failed to push some refs to 'https://github.com/mkirwa/Learning.git'
 git filter-repo --strip-blobs-bigger-than 2M
 git push --force 
 ```
+#### Code to fix ####
+- Look at signup.component.html - the error messages don't display like they are supposed to. Them mandatory and the invalid field.  

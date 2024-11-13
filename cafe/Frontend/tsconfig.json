@@ -22,6 +22,7 @@
     ]
   },
   "angularCompilerOptions": {
+    "enableIvy": false,  // This is the correct place for disabling Ivy
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,

@@ -9,5 +9,8 @@
       "jasmine",
       "node"
     ]
+  },
+  "angularCompilerOptions": {
+    "enableIvy": false  // Correct place for disabling Ivy in this file
   }
 }

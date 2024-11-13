@@ -1,0 +1,24 @@
+<div class="modal">
+  <h2>Select Options</h2>
+  <form [formGroup]="formGroup">
+    <div>
+      <mat-form-field>
+        <mat-select
+          formControlName="selectedOptions"
+          multiple
+          (selectionChange)="onSelectionChange($event)"
+        >
+          <mat-option
+            *ngFor="let option of options"
+            [value]="option.value"
+            [disabled]="option.checked"
+            [ngClass]="{ 'disabled-option': option.checked }"
+          >
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+  <button mat-raised-button color="primary" (click)="save()">Save</button>
+</div>

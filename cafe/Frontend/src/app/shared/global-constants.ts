@@ -2,7 +2,7 @@
 
 export class GlobalConstants {
 
-    // Messaage 
+    // messages to display when something goes wrong  
     public static genericError: string = 'Something went wrong. Please try again later.';
 
     // Regex

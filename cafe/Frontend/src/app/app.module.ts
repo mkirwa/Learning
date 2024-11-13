@@ -17,8 +17,7 @@ import { AppSidebarComponent } from './layouts/full/sidebar/sidebar.component';
 // Importing http client module for making http requests to the backend api
 import {HttpClientModule} from '@angular/common/http';
 import { SignupComponent } from './signup/signup.component';
-import { NgxUiLoaderConfig, SPINNER } from 'ngx-ui-loader';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { NgxUiLoaderConfig, NgxUiLoaderModule, SPINNER } from 'ngx-ui-loader';
 
 // Created by Kirwa
 const ngxUiLoaderConfig: NgxUiLoaderConfig = { 
@@ -33,7 +32,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 }
 
 @NgModule({
-  declarations: [	
+  declarations: [  
     AppComponent,
     HomeComponent,
     BestSellerComponent,
@@ -50,11 +49,10 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     ReactiveFormsModule,
     MaterialModule,
     FlexLayoutModule,
-    SharedModule
+    SharedModule,
+    NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
   ],
-  providers: [
-    provideAnimationsAsync()
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

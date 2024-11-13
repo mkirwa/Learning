@@ -1,0 +1,17 @@
+:root {
+    --dynamic-margin: -14px;
+}
+
+.mat-toolbar {
+    margin-top: var(--dynamic-margin);
+    width: auto;
+    margin-bottom: 10px;
+}
+
+mat-form-field {
+    padding: 5px;
+}
+
+mat-hint{
+    color: red;
+}
