@@ -1,3 +1,4 @@
+<!-- Created by Mahlon Kirwa -->
 <mat-toolbar color="primary">
   <mat-toolbar-row fxLayout=""row>
         <span>Signup</span>
@@ -50,13 +51,27 @@
                     Password
                 </mat-label>
                 <input matInput formControlName="password" type="password" required [type]="password ? 'password': 'text'">
-                <button type="button" mat-icon-button matSuffix (click)="password = !password" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="password"></button>
+                <button type="button" mat-icon-button matSuffix (click)="password = !password" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="password">
+                    <mat-icon>{{password ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
                 <mat-error *ngIf="signupForm.controls.password.touch && signupForm.controls.password.invalid">
                     <span *ngIf="signupForm.controls.password.errors.required">This field is mandatory.</span>
                 </mat-error>
             </mat-form-field>
 
-
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>
+                    Confirm Password
+                </mat-label>
+                <input matInput formControlName="confirmPassword" type="password" required [type]="confirmPassword ? 'password': 'text'">
+                <button type="button" mat-icon-button matSuffix (click)="confirmPassword = !confirmPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="password">
+                    <mat-icon>{{confirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="signupForm.controls.confirmPassword.touch && signupForm.controls.confirmPassword.invalid">
+                    <span *ngIf="signupForm.controls.confirmPassword.errors.required">This field is mandatory.</span>
+                </mat-error>
+                <mat-hint *ngIf="validateSubmit() && !(signupForm.controls.confirmPassword.invalid)">New Password and Confirm Password does not match.</mat-hint>
+            </mat-form-field>
 
         </div>
     </form>

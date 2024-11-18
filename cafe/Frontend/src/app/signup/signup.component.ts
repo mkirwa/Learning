@@ -20,7 +20,7 @@ import { GlobalConstants } from '../shared/global-constants';
 export class SignupComponent implements OnInit {
 
   password = true; // Flag to show/hide password
-  confirmpassword = true; // Flag to show/hide confirm password
+  confirmPassword = true; // Flag to show/hide confirm password
 
   signupForm: any; // Form group for signup form
 
@@ -47,7 +47,7 @@ export class SignupComponent implements OnInit {
   }
 
   // Method to validate if password and confirm password match
-  validateSumit() {
+  validateSubmit() {
     if (this.signupForm.controls['password'].value != this.signupForm.controls['confirmPassword'].value) {
       // this.signupForm.controls['confirmPassword'].setErrors({'incorrect': true});
       return true;
