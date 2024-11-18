@@ -418,6 +418,7 @@ app.controller('LoginController', function($scope, loginService) {
 ### QUICK COMMANDS ###
 
 #### Create a folder with .scss, .html spec.ts and component.ts files ####
+- This command creates the respective files for the page and updates the app.component.ts folder. 
 
 ```bash
 ng g c forgot-password
