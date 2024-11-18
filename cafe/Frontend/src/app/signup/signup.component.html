@@ -76,3 +76,10 @@
         </div>
     </form>
 </mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" type="submit" (click)="handleSubmit()" [disabled]="validateSubmit() || !(signupForm.valid && signupForm.dirty) ">
+        <mat-icon> save </mat-icon> Signup
+    </button>
+    <button mat-raised-button color="warn" mat-dialog-close><mat-icon>cancel</mat-icon>Close</button>
+</mat-dialog-actions>

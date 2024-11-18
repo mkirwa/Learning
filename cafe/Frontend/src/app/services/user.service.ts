@@ -10,8 +10,15 @@ export class UserService {
   constructor(private httpClient:HttpClient) { }
 
   // Create method for signup
-  signup(data:any){
+  signUp(data:any){
     return this.httpClient.post(`${this.url}/user/signup`,data,{
+      headers: new HttpHeaders().set('Content-Type','application/json')
+    })
+  }
+
+  // Create method for forgot password
+  forgotPassword(data:any){
+    return this.httpClient.post(`${this.url}/user/forgotPassword`,data,{
       headers: new HttpHeaders().set('Content-Type','application/json')
     })
   }

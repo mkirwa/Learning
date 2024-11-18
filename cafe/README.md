@@ -416,6 +416,12 @@ app.controller('LoginController', function($scope, loginService) {
 - This setup ensures that if a user isn’t found in the database, the backend throws an exception, and the frontend properly handles it by showing a user-friendly message.
 
 ### QUICK COMMANDS ###
+
+#### Create a folder with .scss, .html spec.ts and component.ts files ####
+
+```bash
+ng g c forgot-password
+```
 #### Cleaning the Repo ####
 ```
 ng cache clean
@@ -444,4 +450,23 @@ git filter-repo --strip-blobs-bigger-than 2M
 git push --force 
 ```
 #### Code to fix ####
+
 - Look at signup.component.html - the error messages don't display like they are supposed to. Them mandatory and the invalid field.  
+
+- The download folder came with the following packages. 
+
+![Alt text](/images/image.png)
+
+### Explaining the code structure ###
+
+#### index.html ####
+
+- This displays the main app. has <app-root> which is what links the rest of the application 
+
+#### environments ####
+
+- This folder displays the url of all these apis. 
+ng g c forgot-password
+#### app ####
+
+- Here, we have the main modules of this projects. We have app.module.ts which links the rest of the applications. 

@@ -68,7 +68,7 @@ export class SignupComponent implements OnInit {
       password: formData.password
     }
     // Call the signup method in the user.service.ts 
-    this.UserService.signup(data).subscribe((response: any) => {
+    this.UserService.signUp(data).subscribe((response: any) => {
       // if everything is successful it will execute
       this.ngxService.stop(); // Stop the loader
       this.dialogRef.close(); // Close the dialog

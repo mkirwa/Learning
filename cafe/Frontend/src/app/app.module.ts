@@ -50,6 +50,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     MaterialModule,
     FlexLayoutModule,
     SharedModule,
+    HttpClientModule,
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
   ],
   providers: [],
