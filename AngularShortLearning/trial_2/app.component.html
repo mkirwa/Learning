@@ -1,0 +1,23 @@
+<form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+  <label for="key1">Key 1:</label>
+  <input id="key1" formControlName="key1" type="text" />
+
+  <label for="key2">Key 2:</label>
+  <input id="key2" formControlName="key2" type="text" />
+
+  <label for="key3">Key 3:</label>
+  <input id="key3" formControlName="key3" type="text" />
+
+  <label for="value">Value:</label>
+  <input id="value" formControlName="value" type="number" />
+
+  <button type="submit">Submit</button>
+</form>
+
+<ag-grid-angular
+  class="ag-theme-alpine"
+  [rowData]="gridData"
+  [columnDefs]="columnDefs"
+  [defaultColDef]="defaultColDef"
+  style="width: 100%; height: 400px;">
+</ag-grid-angular>
