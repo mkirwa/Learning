@@ -13,7 +13,7 @@
 - Change the values of columnField1 and columnField2 in the MetricService class.
 
 ``` java
-Copy code
+ 
 String tableName = "new_table_name"; // Update the table name here
 String columnField1 = "new_column1"; // Update the first column name here
 String columnField2 = "new_column2"; // Update the second column name here
@@ -23,7 +23,7 @@ String columnField2 = "new_column2"; // Update the second column name here
 You can test the API with the following cURL command:
 
 ```bash
-Copy code
+ 
 curl -X POST http://localhost:8080/api/metrics/process \
 -H "Content-Type: application/json" \
 -d '{
@@ -34,7 +34,7 @@ curl -X POST http://localhost:8080/api/metrics/process \
 - Expected Response:
 
 ```json
-Copy code
+ 
 {
   "variableA": ["Value1", "Value2"],
   "results": {
@@ -68,7 +68,7 @@ Copy code
 Example in Java:
 
 ```java
-Copy code
+ 
 HashMap<String, Integer> map = new HashMap<>();
 map.put("key1", 10); // Add key-value pair
 map.put("key2", 20); // Add another key-value pair
@@ -88,7 +88,7 @@ System.out.println(map.get("key1")); // Output: 10
 - Example in Java:
 
 ```java
-Copy code
+ 
 HashSet<String> set = new HashSet<>();
 set.add("Value1"); // Add an element
 set.add("Value2"); // Add another element
@@ -102,7 +102,7 @@ System.out.println(set.contains("Value1")); // Output: true
 - Used to store variableA, a collection of unique strings (e.g., Value1, Value2).
 - Why?: variableA doesn't need key-value pairs, only unique values.
 ```java
-Copy code
+ 
 private HashSet<String> variableA;
 ```
 - HashMap in QueryResponse:
@@ -110,7 +110,7 @@ private HashSet<String> variableA;
 - Used to store results, which maps keys (e.g., key1, key2) to values (e.g., result1, result2).
 - Why?: results represent a key-value mapping, making HashMap ideal.
 ```java
-Copy code
+ 
 private HashMap<String, String> results;
 ```
 
