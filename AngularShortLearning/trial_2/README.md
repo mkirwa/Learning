@@ -8,7 +8,7 @@
 - Solution:
 - Log the API response in the subscribe block to verify if data is being returned:
 ``` typescript
-Copy code
+ 
 this.dataService.postData(inputModel).subscribe(
   (response) => {
     console.log('API Response:', response); // Verify response here
@@ -24,7 +24,7 @@ this.dataService.postData(inputModel).subscribe(
 - Check if the API returns data in the format you expect (InputModel or compatible).
 - If the structure is different, transform the response data to match the grid requirements:
 ``` typescript
-Copy code
+ 
 this.gridData = response.map((item: any) => ({
   key1: item.key1, // Map fields to match grid's structure
   key2: item.key2,
@@ -37,7 +37,7 @@ this.gridData = response.map((item: any) => ({
 - Solution:
 - Ensure gridData is correctly set and is an array:
 ``` typescript
-Copy code
+ 
 this.gridData = [response]; // For a single object
 this.gridData = response; // For an array of objects
 Verify columnDefs matches the keys in gridData.
@@ -47,7 +47,7 @@ Verify columnDefs matches the keys in gridData.
 - Solution:
 - Ensure you have defined proper columnDefs:
 ```typescript
-Copy code
+ 
 this.columnDefs = [
   { field: 'key1', headerName: 'Key 1' },
   { field: 'key2', headerName: 'Key 2' },
@@ -57,7 +57,7 @@ this.columnDefs = [
 ```
 - Check the defaultColDef to ensure basic properties like filtering and sorting are enabled:
 ```typescript
-Copy code
+ 
 this.defaultColDef = {
   sortable: true,
   filter: true,
@@ -69,7 +69,7 @@ this.defaultColDef = {
 - Solution:
 - Ensure the form data matches the expected InputModel:
 ```typescript
-Copy code
+ 
 const inputModel: InputModel = this.dataForm.value;
 ```
 - Validate that the form is properly populated before submitting.
@@ -83,7 +83,7 @@ Add appropriate CORS headers on the server-side if needed.
 - Solution:
 - Use the subscribe method to update gridData only after receiving a valid response:
 ```typescript
-Copy code
+ 
 this.dataService.postData(inputModel).subscribe(
   (response) => {
     if (response && response.length > 0) {
@@ -100,7 +100,7 @@ this.dataService.postData(inputModel).subscribe(
 #### Debugging Tips
 - Add multiple logging statements:
 ```typescript
-Copy code
+ 
 console.log('Form Data:', inputModel);
 console.log('API Response:', response);
 console.log('Grid Data:', this.gridData);
@@ -109,7 +109,7 @@ console.log('Grid Data:', this.gridData);
 #### Fallback Test
 - Use mock data to verify if AG Grid displays it correctly. For example:
 ``` typescript
-Copy code
+ 
 this.gridData = [
   { key1: 'Test1', key2: 'Test2', key3: 'Test3', value: 123 },
   { key1: 'Sample1', key2: 'Sample2', key3: 'Sample3', value: 456 },
@@ -124,7 +124,7 @@ this.gridData = [
 - Solution:
 - Log the raw response without any transformation to debug:
 ```typescript
-Copy code
+ 
 this.dataService.postData(inputModel).subscribe(
   (response: any) => {
     console.log('Raw API Response:', response); // Check the entire response object
@@ -136,7 +136,7 @@ this.dataService.postData(inputModel).subscribe(
 ```
 - If the products array exists in the raw response but is nested, access it explicitly:
 ```typescript
-Copy code
+ 
 this.dataService.postData(inputModel).subscribe(
   (response: any) => {
     const products = response.products || []; // Access the nested products array
@@ -154,7 +154,7 @@ this.dataService.postData(inputModel).subscribe(
 - Check if the response headers include Content-Type: application/json.
 - Example of a valid JSON response from the backend:
 ```json
-Copy code
+ 
 {
   "products": [
     { "key1": "Test1", "key2": "Test2", "key3": "Test3", "value": 123 },
@@ -169,7 +169,7 @@ Copy code
 - Ensure the backend is returning the correct Content-Type header (application/json).
 - Check the HttpClient configuration:
 ```typescript
-Copy code
+ 
 this.http.post<any>(this.apiUrl, input, { observe: 'body' }).subscribe(
   (response) => {
     console.log('Full Response:', response); // Ensure you're observing the response body
@@ -182,7 +182,7 @@ this.http.post<any>(this.apiUrl, input, { observe: 'body' }).subscribe(
 - Solution:
 - Use a more generic type (any) temporarily to verify the response structure:
 ```typescript
-Copy code
+ 
 postData(key: InputModel): Observable<any> {
   return this.http.post<any>(this.apiUrl, key);
 }
@@ -194,7 +194,7 @@ postData(key: InputModel): Observable<any> {
 - Solution:
 - Ensure the backend allows cross-origin requests and includes the appropriate headers:
 - http
-- Copy code
+-  
 - Access-Control-Allow-Origin: *
 - Access-Control-Allow-Methods: POST, GET, OPTIONS
 - Access-Control-Allow-Headers: Content-Type
@@ -205,7 +205,7 @@ postData(key: InputModel): Observable<any> {
 - Solution:
 - Ensure you have a subscriber and the API is not prematurely completing:
 ```typescript
-Copy code
+ 
 this.dataService.postData(inputModel).subscribe(
   (response) => {
     console.log('API Response:', response); // This should trigger
@@ -221,7 +221,7 @@ this.dataService.postData(inputModel).subscribe(
 - Check the HTTP status code (e.g., 200, 204).
 - Use catchError to handle errors and inspect the response:
 ```typescript
-Copy code
+ 
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
@@ -241,13 +241,13 @@ Here’s how you might adjust the service and component if the response contains
 
 Service
 ```typescript
-Copy code
+ 
 postData(key: InputModel): Observable<any> {
   return this.http.post<any>(this.apiUrl, key);
 }
 Component
 typescript
-Copy code
+ 
 this.dataService.postData(inputModel).subscribe(
   (response: any) => {
     const products = response.products || []; // Extract the products array
