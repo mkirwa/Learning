@@ -73,7 +73,7 @@ export class SignupComponent implements OnInit {
       this.ngxService.stop(); // Stop the loader
       this.dialogRef.close(); // Close the dialog
       this.ResponseMessage = response?.message; // Get response message
-      this.SnackbarService.openShackBar(this.ResponseMessage, ""); // Show success message
+      this.SnackbarService.openSnackBar(this.ResponseMessage, ""); // Show success message
       this.router.navigate(['/']); // Navigate to home page
     }, (error: any) => {
       // if there is an error it will execute this code below
@@ -83,7 +83,7 @@ export class SignupComponent implements OnInit {
       } else {
         this.ResponseMessage = GlobalConstants.genericError; // Get generic error message
       }
-      this.SnackbarService.openShackBar(this.ResponseMessage, GlobalConstants.error); // Show error message
+      this.SnackbarService.openSnackBar(this.ResponseMessage, GlobalConstants.error); // Show error message
     });
   }
 }

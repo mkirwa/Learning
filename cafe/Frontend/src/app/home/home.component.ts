@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
 
   // Method to open the forgot password dialog. Added this method. -> Created by Mahlon Kirwa
   // This method is called when the forgot password button is clicked at the home page
-  handleForgotPassword(){
+  handleForgotPasswordAction(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.width = '550px';
     this.dialog.open(ForgotPasswordComponent,dialogConfig);
