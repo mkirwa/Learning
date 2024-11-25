@@ -114,6 +114,44 @@ private HashSet<String> variableA;
 private HashMap<String, String> results;
 ```
 
+#### Explanation of Query ####
+```SQL
+SELECT from intrinsic_candidate:
+```
 
+- Fetches all records from the old table using field_2 as the unique identifier.
+
+```sql
+Copy code
+SELECT field_2 AS unique_field, * FROM intrinsic_candidate
+SELECT from intrinsic_candidate_001:
+```
+
+- Fetches all records from the new table using field_17 as the unique identifier.
+
+```sql
+Copy code
+SELECT field_17 AS unique_field, * FROM intrinsic_candidate_001
+```
+
+#### UNION: ####
+
+- Combines the results from both tables.
+- Automatically removes duplicate rows based on the selected columns (here, the unique fields and the rest of the table data).
+
+#### DISTINCT: ####
+
+- Ensures no duplicate rows are included after the union operation.
+- Final Query: The final query combines both tables and ensures the uniqueness of records based on their unique columns:
+
+```sql
+Copy code
+SELECT DISTINCT * 
+FROM (
+    SELECT field_2 AS unique_field, * FROM intrinsic_candidate
+    UNION
+    SELECT field_17 AS unique_field, * FROM intrinsic_candidate_001
+) combined_data
+```
 
 

@@ -1,8 +1,4 @@
 package com.example.demo.service;
-/*
-The service layer links the controller to the database. 
-This is where the StringBuilder is used for dynamic query construction.
-*/
 
 import com.example.demo.model.Metric;
 import com.example.demo.model.QueryResponse;
@@ -11,39 +7,51 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.HashSet;
 
-@Service // Marks this as a Spring service
+@Service
 public class MetricService {
 
     /**
      * Processes the given Metric and constructs a QueryResponse.
-     *
+     * 
+     * This service pulls data from two tables, removes duplicates,
+     * and returns only unique records.
+     * 
      * @param metric The Metric object received from the controller.
-     * @return A QueryResponse object with mock data.
+     * @return A QueryResponse object with unique data.
      */
     public QueryResponse processMetric(Metric metric) {
-        // Example database table and column mapping
-        String tableName = "intrinsic_candidate";
-        String columnField1 = "field_1";
-        String columnField2 = "field_2";
+        // Table names
+        String oldTable = "intrinsic_candidate";
+        String newTable = "intrinsic_candidate_001";
 
-        // Build a dynamic query using StringBuilder
+        // Unique columns in each table
+        String oldTableUniqueColumn = "field_2";
+        String newTableUniqueColumn = "field_17";
+
+        // Build the SQL query using UNION to remove duplicates
         StringBuilder query = new StringBuilder();
-        query.append("SELECT * FROM ").append(tableName)
-             .append(" WHERE ").append(columnField1).append(" = '").append(metric.getField1()).append("'")
-             .append(" AND ").append(columnField2).append(" = '").append(metric.getField2()).append("'");
+        query.append("SELECT DISTINCT * FROM (")
+             .append("SELECT ").append(oldTableUniqueColumn).append(" AS unique_field, * ")
+             .append("FROM ").append(oldTable).append(" ")
+             .append("UNION ")
+             .append("SELECT ").append(newTableUniqueColumn).append(" AS unique_field, * ")
+             .append("FROM ").append(newTable)
+             .append(") combined_data");
 
         System.out.println("Generated Query: " + query.toString());
 
-        // Mock database interaction (replace with actual database query execution)
+        // Mock database interaction
         QueryResponse response = new QueryResponse();
+        
+        // Add mock unique data
         HashSet<String> variableA = new HashSet<>();
-        variableA.add("Value1");
-        variableA.add("Value2");
+        variableA.add("UniqueValueFromOldTable");
+        variableA.add("UniqueValueFromNewTable");
         response.setVariableA(variableA);
 
         HashMap<String, String> results = new HashMap<>();
-        results.put("key1", "result1");
-        results.put("key2", "result2");
+        results.put("OldTableKey", "OldTableResult");
+        results.put("NewTableKey", "NewTableResult");
         response.setResults(results);
 
         return response;
