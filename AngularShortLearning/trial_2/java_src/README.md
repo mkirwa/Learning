@@ -154,4 +154,18 @@ FROM (
 ) combined_data
 ```
 
+- If field_3 is only available in the intrinsic_candidate table and not in intrinsic_candidate_001, you can handle this scenario by returning NULL or a placeholder value for field_3 when pulling data from intrinsic_candidate_001. 
+- This ensures the UNION operation is consistent (all SELECT queries must return the same number of columns).
+
+```SQL
+SELECT DISTINCT field_3
+FROM (
+    SELECT field_2 AS unique_field, field_3 
+    FROM intrinsic_candidate
+    UNION
+    SELECT field_17 AS unique_field, NULL AS field_3
+    FROM intrinsic_candidate_001
+) combined_data;
+```
+
 
