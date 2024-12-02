@@ -22,4 +22,11 @@ export class UserService {
       headers: new HttpHeaders().set('Content-Type','application/json')
     })
   }
+
+  // Create method for login page
+  login(data:any){
+    return this.httpClient.post(`${this.url}/user/login`,data,{
+      headers: new HttpHeaders().set('Content-Type','application/json')
+    })
+  }
 }

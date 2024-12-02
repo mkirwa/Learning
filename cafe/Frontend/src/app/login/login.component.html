@@ -1,0 +1,50 @@
+<!-- Created by Mahlon Kirwa This code creates the pop for login and then provides an option to close-->
+<mat-toolbar color="primary">
+    <mat-toolbar-row fxLayout="row">
+          <span>Login</span>
+          <span class="spacer"></span>
+          <button class="spacer-dialog-close" mat-icon-button mat-dialog-close>
+              <mat-icon>close</mat-icon>
+          </button>
+      </mat-toolbar-row>
+</mat-toolbar>
+
+<!-- This is now code for the form that populates inside the mat-tool bar -->
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="loginForm">
+        <div fxFlex fxLayout="column">
+
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" required>
+                <mat-error *ngIf="loginForm.controls.email.touched && loginForm.controls.email.invalid">
+                    <span *ngIf="loginForm.controls.email.errors.required">This field is mandatory.</span>
+                    <span *ngIf="loginForm.controls.email.errors.pattern">This field is invalid.</span>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Password</mat-label>
+                <input matInput formControlName="password" required type="hide ? 'password' : 'text'">
+                <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="loginForm.controls.password.touched && loginForm.controls.password.invalid">
+                    <span *ngIf="loginForm.controls.password.errors.required">This field is mandatory.</span>
+                </mat-error>
+            </mat-form-field>
+
+        </div>
+    </form>
+</mat-dialog-content>
+
+<!-- Buttons to hide or cancel the forms -->
+<mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" type="submit" (click)="handleSubmit()" [disabled]="!(loginForm.valid && loginForm.dirty)">
+        <mat-icon>login</mat-icon> Login
+    </button>
+    <button mat-raised-button color="warn" mat-dialog-close>
+        <mat-icon>cancel</mat-icon>
+        Close
+    </button>
+</mat-dialog-actions>

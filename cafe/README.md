@@ -471,3 +471,116 @@ ng g c forgot-password
 #### app ####
 
 - Here, we have the main modules of this projects. We have app.module.ts which links the rest of the applications. 
+
+## ADDING A COMPONENT APPLICATION ##
+1. Start by going to app folder and creating the html, scss, spec.ts and a .ts files. Running the following command automatically creates them for you. 
+```bash
+ng g c login
+```
+- This creates a component diretory called login
+
+2. Modify the service directory to link to a service path. The service should have already been created in the back end. The service should look like so.
+
+```ts
+// Create method for login page
+  login(data:any){
+    return this.httpClient.post(`${this.url}/user/login`,data,{
+      headers: new HttpHeaders().set('Content-Type','application/json')
+    })
+  }
+```
+3. Import your login component or the added component to the home directory. Add a function to handle your component on the home directory like so. 
+
+```ts
+  // Method to open login dialog. Added this method. -> Created by Mahlon Kirwa
+  // This method is called when the login button is clicked at the home page
+  handlLoginAction(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '550px';
+    this.dialog.open(LoginComponent,dialogConfig);
+  }
+```
+4. Add the login button or entry to the home page so that when the button is clicked, it calls the handle component on the home directory which calls the real login component like so.
+
+```html
+<div class="bg-image"></div>
+<app-best-seller></app-best-seller>
+
+<div class="wrapper sticky">
+  <nav class="navbar-fixed-top">
+    <a href="#" class="logo">
+      <mat-icon>storefront</mat-icon> Cafe Management System
+    </a>
+    <ul>
+      <li>
+        <a (click)="handleLoginAction()">Login</a> <!-- THIS IS WHAT WAS ADDED-->
+        <a (click)="handleSignupAction()">signup</a>
+        <a (click)="handleForgotPasswordAction()">Forgot Password?</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+<div class="footer" id="signup">
+  <h2>All right reserved BTech Days and Mahlon</h2>
+</div>
+```
+5. Make sure the module is imported on app.module.ts so that it can implement or use all the impoted features.
+
+6. Now go back to the login page and develop the application using the four files created. The defaults look like this. 
+
+### login.component.ts ###
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-login',
+  standalone: true,
+  imports: [],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss'
+})
+export class LoginComponent {
+
+}
+
+```
+### login.component.html ###
+```html
+<p>login works!</p>
+```
+
+### login.component.scss ###
+```scss
+
+```
+
+### login.component.spec.ts ###
+```ts
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { LoginComponent } from './login.component';
+
+describe('LoginComponent', () => {
+  let component: LoginComponent;
+  let fixture: ComponentFixture<LoginComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [LoginComponent]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(LoginComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+
+```
+
+![alt text](/images/image-001.png)
+
