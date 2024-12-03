@@ -259,3 +259,62 @@ this.dataService.postData(inputModel).subscribe(
   }
 );
 ```
+
+The issue you're describing likely stems from how Angular handles form validation. When the form is auto-populated, the validation may not re-trigger properly, leaving the form control in an invalid state until the user interacts with it.
+
+To fix this issue, you can use Angular's updateValueAndValidity method after auto-populating the field. This method forces the validation to re-evaluate, ensuring the field state is updated appropriately.
+
+Here’s how you can resolve the issue:
+
+1. Trigger Validation After Auto-Populating
+After auto-populating the field, call the updateValueAndValidity method on the form control. For example:
+
+```typescript
+Copy code
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-form',
+  templateUrl: './form.component.html',
+  styleUrls: ['./form.component.css']
+})
+export class FormComponent implements OnInit {
+  form: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      autoField: ['', [Validators.required, Validators.pattern(/^\d+$/)]], // Example regex: only digits
+    });
+  }
+
+  ngOnInit(): void {
+    this.autoPopulateField();
+  }
+
+  autoPopulateField(): void {
+    // Example: auto-populate the field with a number
+    this.form.get('autoField')?.setValue('12345');
+
+    // Trigger validation explicitly
+    this.form.get('autoField')?.updateValueAndValidity();
+  }
+}
+```
+2. Ensure Validators Are Synchronous
+If the validator is asynchronous, this behavior can also occur. Make sure the validation logic is synchronous if it does not depend on external data.
+
+3. Use markAsTouched (Optional)
+If the field should appear touched after auto-population, you can also use the markAsTouched method:
+
+typescript
+Copy code
+this.form.get('autoField')?.markAsTouched();
+4. Debugging Validators
+To debug and confirm validation issues:
+
+Log the status of the form control:
+typescript
+Copy code
+console.log(this.form.get('autoField')?.errors);
+Check if the field's value is being set as expected.
