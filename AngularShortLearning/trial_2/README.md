@@ -318,3 +318,188 @@ typescript
 Copy code
 console.log(this.form.get('autoField')?.errors);
 Check if the field's value is being set as expected.
+
+
+#### PROBLEM STATEMENT ####
+
+##### Possible Causes #####
+- Regular Expression Overhead: The complexity of the regular expression might lead to discrepancies in parsing valid values.
+- Formatting Issues: Pre-populated data may not align with the expected pattern (e.g., extra spaces or implicit type conversion).
+- Reactive Form Re-Evaluation: Validators might not be properly synchronized when form controls are pre-populated.
+Code Example
+
+- Modal Component
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-modal',
+  template: `
+    <div *ngIf="form">
+      <form [formGroup]="form">
+        <div>
+          <label>Input Field 1:</label>
+          <input formControlName="field1" />
+          <span *ngIf="form.controls['field1'].errors?.pattern">
+            Invalid input.
+          </span>
+        </div>
+        <div>
+          <label>Input Field 2:</label>
+          <input formControlName="field2" />
+          <span *ngIf="form.controls['field2'].errors?.pattern">
+            Invalid input.
+          </span>
+        </div>
+      </form>
+    </div>
+  `
+})
+export class ModalComponent implements OnInit {
+  form!: FormGroup;
+
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit() {
+    this.form = this.fb.group({
+      field1: [
+        '12.4567',
+        [Validators.pattern('^-?([0-8]?[0-9]|90)(\\.[0-9]{1,18})$')]
+      ],
+      field2: [
+        '45.123',
+        [Validators.pattern('^-?([0-8]?[0-9]|90)(\\.[0-9]{1,18})$')]
+      ]
+    });
+  }
+}
+```
+- Validator File (Reusable Validation Logic)
+
+```typescript
+export class CustomValidators {
+  static numericPattern = /^-?([0-8]?[0-9]|90)(\.[0-9]{1,18})$/;
+
+  static numericValidator(control: FormControl) {
+    const value = control.value;
+    if (value && !this.numericPattern.test(value)) {
+      return { pattern: true };
+    }
+    return null;
+  }
+}
+```
+
+- Normalize Pre-Populated Data: Ensure the values provided to the form are trimmed and normalized. For instance, use parseFloat or toFixed() to format values properly.
+
+- Custom Validator Function: Rewrite the validator to handle edge cases, ensuring compatibility with valid numeric values.
+
+- Manually Trigger Validation: After form initialization, call updateValueAndValidity to sync validation.
+
+Updated Code
+Modal Component (Fix)
+
+```typescript
+
+ngOnInit() {
+  this.form = this.fb.group({
+    field1: [
+      this.normalizeValue('12.4567'),
+      [CustomValidators.numericValidator]
+    ],
+    field2: [
+      this.normalizeValue('45.123'),
+      [CustomValidators.numericValidator]
+    ]
+  });
+
+  // Ensure values are validated after initialization
+  this.form.controls['field1'].updateValueAndValidity();
+  this.form.controls['field2'].updateValueAndValidity();
+}
+
+private normalizeValue(value: string | number): string {
+  return parseFloat(value as string).toFixed(4); // Ensure consistent formatting
+}
+```
+- Custom Validator Update
+
+```typescript
+Copy code
+static numericValidator(control: FormControl) {
+  const value = control.value ? parseFloat(control.value).toFixed(4) : '';
+  if (!this.numericPattern.test(value)) {
+    return { pattern: true };
+  }
+  return null;
+}
+```
+
+- normalizeValue: Formats the pre-populated data to align with the expected pattern.
+
+- Updated Validator Logic: Ensures the regex handles formatted values, reducing false positives.
+
+- updateValueAndValidity: Explicitly recalculates validation state to synchronize the form.
+
+- Addresseing the complexity of the regular expressions and whether timing issues could be suspected.
+
+- Fixing the Complexity of Regular Expressions
+
+- The original regular expression:
+
+```regex
+^-?([0-8]?[0-9]|90)(\.[0-9]{1,18})$
+```
+- This pattern validates:
+
+- A number between -90 and 90 (inclusive).
+- An optional decimal part with up to 18 digits.
+
+- Issues with This Regex
+- Precision Handling: Pre-populated values like 12.4567 may cause mismatches due to how floating-point numbers are represented in JavaScript, potentially producing rounding issues when compared to regex.
+- String Parsing: The regex operates on strings, so any formatting discrepancies (e.g., extra spaces or mismatched decimal formats) might cause valid values to fail.
+- Regex Complexity: Evaluating a regex like this on dynamically updated input may introduce inconsistencies during the Angular form lifecycle.
+##### Improvements ####
+- Normalize Input Values:
+
+  - By pre-formatting numbers to a consistent format (e.g., toFixed(4)), we ensure that the regex operates on uniform data.
+  - This reduces the risk of regex mismatches caused by differences in precision.
+
+-  Custom Validator for Logical Validation:
+
+  - Regex is retained but supplemented with programmatic validation to handle edge cases (e.g., parsing and rounding numbers).
+
+- Addressing Timing Issues
+
+   - Reactive Form Lifecycle: Angular forms run validation asynchronously when controls are updated. If the pre-populated values are set before the form's validators are fully initialized, the initial validation state may be inconsistent.
+  - User Interaction: Clicking in and out of an input triggers blur and focus events, which may recalibrate validation, leading to discrepancies if validators are not synchronized properly.
+
+- Mitigating Timing Issues
+  - updateValueAndValidity: After initializing the form, calling this method ensures that the validators re-evaluate the form state with the pre-populated values. This mitigates issues caused by mismatched initialization timing.
+  - Explicit Normalization: By normalizing input data before validation, we eliminate race conditions caused by discrepancies in how input values are handled.
+  - Angular Change Detection: Ensures that any value changes or updates are properly detected by Angular, avoiding partial updates or inconsistent states.
+
+
+- How to address regex complexity 
+
+  - Ensuring consistent input formats with pre-processing (normalization).
+  - Supplementing the regex with logical checks to avoid reliance on string patterns alone.
+
+- How to address timing issues
+  - Using updateValueAndValidity to synchronize validators after initialization.
+  - Normalizing input data to prevent discrepancies from floating-point precision or string formatting.
+  
+By reducing reliance on regex for precision-based validation and handling Angular’s asynchronous form behavior, we ensured the form behaves predictably.
+
+
+
+
+
+
+
+
+
+
+
