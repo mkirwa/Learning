@@ -15,11 +15,13 @@ import { AppHeaderComponent } from './layouts/full/header/header.component';
 import { AppSidebarComponent } from './layouts/full/sidebar/sidebar.component';
 
 // Importing http client module for making http requests to the backend api
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { SignupComponent } from './signup/signup.component';
 import { NgxUiLoaderConfig, NgxUiLoaderModule, SPINNER } from 'ngx-ui-loader';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginComponent } from './login/login.component';
+import { Http } from '@material-ui/icons';
+import { tokenInterceptorInterceptor } from './services/token-interceptor.interceptor';
 
 // Created by Kirwa
 const ngxUiLoaderConfig: NgxUiLoaderConfig = { 
@@ -43,7 +45,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     AppSidebarComponent,
     SignupComponent,
     ForgotPasswordComponent,
-    LoginComponent
+    LoginComponent,
    ],
   imports: [
     BrowserModule,
@@ -57,7 +59,10 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     HttpClientModule,
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
   ],
-  providers: [],
+  providers: [
+    HttpClientModule, {provide: HTTP_INTERCEPTORS, 
+    useClass: tokenInterceptorInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

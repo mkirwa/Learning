@@ -15,4 +15,6 @@ export class GlobalConstants {
     //variable
     public static error:string = 'error';
 
+    // messages to display when the user is not authenticated
+    public static unauthorized: string = 'You are not authorized to access this page.';
 }

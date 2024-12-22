@@ -29,4 +29,14 @@ export class UserService {
       headers: new HttpHeaders().set('Content-Type','application/json')
     })
   }
+
+  // Implement a service that checks if a token exists and if it's valid
+  // if a token exists and is valid, the user is redirected to the dashboard
+  // other clear the local storage and redirect to the login page
+  // This function uses the jwt-decode library to decode the token and check if it's valid
+  // This library was installed using the command: npm install jwt-decode
+  // It extracts the token from the local storage and decodes it. It will pick any token that is stored in the local storage
+  checkToken(){
+    return this.httpClient.get(this.url+"/user/checkToken");
+  }
 }

@@ -423,6 +423,14 @@ app.controller('LoginController', function($scope, loginService) {
 ```bash
 ng g c forgot-password
 ```
+
+#### Create service files ####
+- This command creates the respective files for dashboard services. 
+- Make sure you've open an integrated terminal for that folder.
+
+```bash
+ng g s dashboard
+```
 #### Cleaning the Repo ####
 ```
 ng cache clean
@@ -583,4 +591,6 @@ describe('LoginComponent', () => {
 ```
 
 ![alt text](/images/image-001.png)
+
+
 

@@ -3,6 +3,9 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SignupComponent } from '../signup/signup.component';
 import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
 import { LoginComponent } from '../login/login.component';
+import { UserService } from '../services/user.service';
+import { Router } from '@angular/router';
+import { DashboardComponent } from '../dashboard/dashboard.component';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -10,9 +13,23 @@ import { LoginComponent } from '../login/login.component';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private dialog:MatDialog) { }
+  constructor(private dialog:MatDialog, 
+    private userServices:UserService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+    // check if the token exists. We are calling the user service method checkToken
+    this.userServices.checkToken().subscribe(
+      (response:any) => {
+        // if the token exists, redirect to the dashboard
+        this.router.navigate(['/cafe/dashboard']);
+      },
+      (error:any) => {
+        // if the token does not exist, do nothing
+        console.log("TOKEN NOT FOUND! ", error);
+      }
+    )
   }
   // Method to open the signup dialog. Added this method. -> Created by Mahlon Kirwa
   // This method is called when the signup button is clicked at the home page
