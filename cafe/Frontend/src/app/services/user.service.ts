@@ -39,4 +39,11 @@ export class UserService {
   checkToken(){
     return this.httpClient.get(this.url+"/user/checkToken");
   }
+
+  // Create method for login page
+  changePassword(data:any){
+    return this.httpClient.post(`${this.url}/user/changePassword`,data,{
+      headers: new HttpHeaders().set('Content-Type','application/json')
+    })
+  }
 }
