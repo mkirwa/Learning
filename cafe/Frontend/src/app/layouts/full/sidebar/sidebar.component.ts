@@ -7,6 +7,7 @@ import { MenuItems } from 'src/app/shared/menu-items';
   styleUrls: []
 })
 export class AppSidebarComponent implements OnDestroy {
+  // TODO : Review and add comments -> Created by Mahlon Kirwa
   mobileQuery: MediaQueryList;
   userRole: any;
   token: any = localStorage.getItem('token');
