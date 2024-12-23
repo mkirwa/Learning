@@ -8,13 +8,13 @@ export interface Menu {
     role?: string;
 }
 
-const menuItems = [
+const MENUITEMS = [
     {state: 'dashboard', name: 'DASHBOARD', type: 'link', icon: 'dashboard', role: ''},
 ];
 
 @Injectable()
 export class MenuItems {
     getMenuItems(): Menu[] {
-        return menuItems;
+        return MENUITEMS;
     }
 }
