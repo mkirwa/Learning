@@ -22,6 +22,8 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { LoginComponent } from './login/login.component';
 import { Http } from '@material-ui/icons';
 import { tokenInterceptorInterceptor } from './services/token-interceptor.interceptor';
+import { ConfirmationComponent } from './material-component/dialog/confirmation/confirmation.component';
+import { ChangePasswordComponent } from './material-component/dialog/change-password/change-password.component';
 
 // Created by Kirwa
 const ngxUiLoaderConfig: NgxUiLoaderConfig = { 
@@ -46,6 +48,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     SignupComponent,
     ForgotPasswordComponent,
     LoginComponent,
+    ConfirmationComponent,
+    ChangePasswordComponent
    ],
   imports: [
     BrowserModule,
