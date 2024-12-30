@@ -25,6 +25,8 @@ import { tokenInterceptorInterceptor } from './services/token-interceptor.interc
 import { ConfirmationComponent } from './material-component/dialog/confirmation/confirmation.component';
 import { ChangePasswordComponent } from './material-component/dialog/change-password/change-password.component';
 
+import { MatIconModule } from '@angular/material/icon';
+
 // Created by Kirwa
 const ngxUiLoaderConfig: NgxUiLoaderConfig = { 
   text: 'Loading...',
@@ -49,7 +51,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     ForgotPasswordComponent,
     LoginComponent,
     ConfirmationComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    ConfirmationComponent
    ],
   imports: [
     BrowserModule,
@@ -61,6 +64,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     FlexLayoutModule,
     SharedModule,
     HttpClientModule,
+    MatIconModule,
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
   ],
   providers: [
