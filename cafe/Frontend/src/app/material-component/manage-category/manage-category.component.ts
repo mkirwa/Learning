@@ -68,4 +68,6 @@ export class ManageCategoryComponent implements OnInit {
   } 
 
   handleAddAction(){}
+
+  handleEditAction(data:any){}
 }
