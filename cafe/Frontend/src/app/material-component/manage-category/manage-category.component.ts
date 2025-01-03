@@ -62,8 +62,10 @@ export class ManageCategoryComponent implements OnInit {
     // Get the value of the input field and convert it to lowercase
     // event.target is the input field and we are typecasting it to HTMLInputElement to get the value of the input field
     const filterValue = (event.target as HTMLInputElement).value;
-    // Filter the data in the table based on the input value and convert it to lowercase 
+    // Filter the data in the table based on the input value and convert ithandleAddAction to lowercase 
     // The filter function is used to filter the data in the table based on the input value
     this.dataSource.filter = filterValue.trim().toLowerCase();
   } 
+
+  handleAddAction(){}
 }

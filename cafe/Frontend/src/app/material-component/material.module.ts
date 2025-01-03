@@ -20,7 +20,7 @@ import { ViewBillProductsComponent } from './dialog/view-bill-products/view-bill
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    CdkTableModule
+    CdkTableModule,
   ],
   providers: [],
   declarations: [

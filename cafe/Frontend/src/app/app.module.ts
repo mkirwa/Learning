@@ -26,6 +26,7 @@ import { ConfirmationComponent } from './material-component/dialog/confirmation/
 import { ChangePasswordComponent } from './material-component/dialog/change-password/change-password.component';
 
 import { MatIconModule } from '@angular/material/icon';
+import { ManageCategoryComponent } from './material-component/manage-category/manage-category.component';
 
 // Created by Kirwa
 const ngxUiLoaderConfig: NgxUiLoaderConfig = { 
@@ -52,7 +53,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     LoginComponent,
     ConfirmationComponent,
     ChangePasswordComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    ManageCategoryComponent
    ],
   imports: [
     BrowserModule,
