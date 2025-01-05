@@ -31,7 +31,7 @@ export class ManageProductComponent implements OnInit {
   }
 
   tableData() {
-    this.productService.getProduct().subscribe((response: any) => {
+    this.productService.getProducts().subscribe((response: any) => {
       this.ngxService.stop();
       this.dataSource = new MatTableDataSource(response);
     }, (error: any) => {
@@ -60,5 +60,7 @@ handleEditAction(id: any) {
 }
 
 handleDeleteAction(id: any) {}
+
+onChange(status: any, id: any) {}
 
 }

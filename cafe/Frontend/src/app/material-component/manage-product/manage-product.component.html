@@ -47,9 +47,12 @@
                 <button mat-icon-button color="warn" (click)="handleDeleteAction(element)">
                     <mat-icon>delete</mat-icon>
                 </button>
+                <mat-slide-toggle [checked]="element.status" (change)="onChange($event.checked, element.id)" 
+                    matTooltip="Activate or Deactivate Product">
+                </mat-slide-toggle>
             </td>
         </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
