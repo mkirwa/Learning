@@ -87,7 +87,6 @@ export class CategoryComponent implements OnInit {
         this.dialogRef.close();
         this.onEditCategory.emit();
         this.responseMessage = response.message;
-        alert("Successfully Updated Category");
         this.onAddCategory.emit();
         this.snackbarService.openSnackBar(
           this.responseMessage.message,
