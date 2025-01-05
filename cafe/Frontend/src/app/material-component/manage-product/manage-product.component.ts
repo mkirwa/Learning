@@ -53,5 +53,10 @@ applyFilter(event: Event) {
   this.dataSource.filter = filterValue.trim().toLowerCase();
 
 }
+handleAddAction() {}
+
+handleEditAction(id: any) {
+
+}
 
 }
