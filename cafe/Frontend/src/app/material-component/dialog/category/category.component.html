@@ -1,9 +1,9 @@
 <mat-toolbar color="primary">
-    <mat-toolbar-row fxLayout="row">
+    <mat-toolbar-row fxfLayout="row">
         <span>{{dialogData.action}} Category</span>
         <span class="spacer"></span>
         <button class="mat-dialog-close" mat-icon-button mat-dialog-close>
-        <mat-icon>close</mat-icon>
+            <mat-icon>close</mat-icon>
         </button>
     </mat-toolbar-row>
 </mat-toolbar>
@@ -11,15 +11,13 @@
 <mat-dialog-content class="mat-typography">
     <form [formGroup]="categoryForm">
         <div fxFlex fxLayout="column">
-            <div fxLayout="row wrap">
-                <mat-form-field appearance="outline" fxFlex>
-                    <mat-label>Name</mat-label>
-                    <input matInput placeholder="Name" formControlName="name" required />
-                    <mat-error *ngIf="categoryForm.controls.name.touched && categoryForm.controls.name.invalid">
-                        <span *ngIf="categoryForm.controls.name.errors.required">This field is mandatory.</span>
-                    </mat-error>
-                </mat-form-field>
-            </div>
+            <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" required>
+                <mat-error *ngIf="categoryForm.controls.name.touched && categoryForm.controls.name.invalid">
+                    <span *ngIf="categoryForm.controls.name.errors.required">This field is mandatory.</span>
+                </mat-error>
+            </mat-form-field>
         </div>
     </form>
 </mat-dialog-content>

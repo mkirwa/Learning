@@ -15,7 +15,7 @@ export class CategoryComponent implements OnInit {
   onEditCategory = new EventEmitter();
   categoryForm: any = FormGroup;
   dialogAction: any = 'Add';
-  action: any = 'Add';
+  action: any = 'Update';
 
   responseMessage: any;
   constructor(
@@ -31,20 +31,20 @@ export class CategoryComponent implements OnInit {
       name: [null, [Validators.required]],
     });
     if (this.dialogAction === 'Edit') {
-      this.dialogAction = 'Edit';
-      this.action = 'Update';
+      this.dialogAction = "Edit";
+      this.action = "Update";
       this.categoryForm.patchValue(this.dialogData.data);
     }
   }
 
   handleSubmit() {
-    if (this.categoryForm.valid) {
+    // if (this.categoryForm.valid) {
       if (this.dialogAction === 'Edit') {
         this.edit();
       } else {
         this.add();
       }
-    }
+    // }
   }
 
   add() {
@@ -78,13 +78,13 @@ export class CategoryComponent implements OnInit {
   edit() {
     var formData = this.categoryForm.value;
     var data = {
-      name: formData.name,
       id: this.dialogData.data.id,
+      name: formData.name
     };
     this.categoryService.update(data).subscribe(
       (response: any) => {
         this.responseMessage = response?.message;
-        this.onEditCategory.emit();
+        this.onAddCategory.emit();
         this.dialogRef.close();
         this.snackbarService.openSnackBar(
           this.responseMessage.message,

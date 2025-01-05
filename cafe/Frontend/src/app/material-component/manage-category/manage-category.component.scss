@@ -1,5 +1,8 @@
-.float-right{
+::ng-deep .float-right{
     float: right;
+    margin-left: auto;
+    display: flex;
+    justify-content: flex-end;
 }
 
 mat-card{

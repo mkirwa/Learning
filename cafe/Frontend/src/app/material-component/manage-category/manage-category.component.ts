@@ -82,10 +82,26 @@ export class ManageCategoryComponent implements OnInit {
     this.router.events.subscribe(() => {
       dialogRef.close();
     });
-    const sub = dialogRef.componentInstance.onAddCategory.subscribe(() => {
+    const sub = dialogRef.componentInstance.onAddCategory.subscribe((response) => {
       this.tableData();
     });
   }
 
-  handleEditAction(data: any) {}
+  handleEditAction(values: any) {
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = { 
+      action: 'Edit',
+      data: values
+    };
+    dialogConfig.width = '500px';
+    const dialogRef = this.dialog.open(CategoryComponent, dialogConfig);
+    this.router.events.subscribe(() => {
+      dialogRef.close();
+    });
+    const sub = dialogRef.componentInstance.onAddCategory.subscribe((response) => {
+      this.tableData();
+    });
+
+  }
 }
