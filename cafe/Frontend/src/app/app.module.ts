@@ -22,12 +22,12 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { LoginComponent } from './login/login.component';
 import { Http } from '@material-ui/icons';
 import { tokenInterceptorInterceptor } from './services/token-interceptor.interceptor';
-import { ConfirmationComponent } from './material-component/dialog/confirmation/confirmation.component';
-import { ChangePasswordComponent } from './material-component/dialog/change-password/change-password.component';
+// import { ConfirmationComponent } from './material-component/dialog/confirmation/confirmation.component';
+// import { ChangePasswordComponent } from './material-component/dialog/change-password/change-password.component';
 
 import { MatIconModule } from '@angular/material/icon';
-import { ManageCategoryComponent } from './material-component/manage-category/manage-category.component';
-import { CategoryComponent } from './material-component/dialog/category/category.component';
+// import { ManageCategoryComponent } from './material-component/manage-category/manage-category.component';
+// import { CategoryComponent } from './material-component/dialog/category/category.component';
 
 // Created by Kirwa
 const ngxUiLoaderConfig: NgxUiLoaderConfig = { 
@@ -52,11 +52,10 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     SignupComponent,
     ForgotPasswordComponent,
     LoginComponent,
-    ConfirmationComponent,
-    ChangePasswordComponent,
-    ConfirmationComponent,
-    ManageCategoryComponent,
-    CategoryComponent
+    // ConfirmationComponent,
+    // ChangePasswordComponent,
+    // ConfirmationComponent,
+    // ManageCategoryComponent,
    ],
   imports: [
     BrowserModule,
