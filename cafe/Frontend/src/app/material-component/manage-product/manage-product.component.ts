@@ -59,4 +59,6 @@ handleEditAction(id: any) {
 
 }
 
+handleDeleteAction(id: any) {}
+
 }
