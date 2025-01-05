@@ -30,7 +30,7 @@ export class CategoryComponent implements OnInit {
     this.categoryForm = this.formBuilder.group({
       name: [null, [Validators.required]],
     });
-    if (this.dialogAction === 'Edit') {
+    if (this.dialogData.action === 'Edit') {
       this.dialogAction = "Edit";
       this.action = "Update";
       this.categoryForm.patchValue(this.dialogData.data);
@@ -54,12 +54,13 @@ export class CategoryComponent implements OnInit {
     };
     this.categoryService.add(data).subscribe(
       (response: any) => {
-        this.responseMessage = response?.message;
-        this.onAddCategory.emit();
         this.dialogRef.close();
+        this.onAddCategory.emit();
+        this.responseMessage = response.message;
+        alert("Successfully Added Category");
         this.snackbarService.openSnackBar(
           this.responseMessage.message,
-          'success'
+          'Success'
         );
       },
       (error) => {
@@ -83,12 +84,14 @@ export class CategoryComponent implements OnInit {
     };
     this.categoryService.update(data).subscribe(
       (response: any) => {
-        this.responseMessage = response?.message;
-        this.onAddCategory.emit();
         this.dialogRef.close();
+        this.onEditCategory.emit();
+        this.responseMessage = response.message;
+        alert("Successfully Updated Category");
+        this.onAddCategory.emit();
         this.snackbarService.openSnackBar(
           this.responseMessage.message,
-          'success'
+          'Success'
         );
       },
       (error) => {
