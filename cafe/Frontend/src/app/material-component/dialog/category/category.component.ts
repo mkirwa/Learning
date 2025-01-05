@@ -10,15 +10,23 @@ import { GlobalConstants } from 'src/app/shared/global-constants';
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss',
 })
+
+// This component is used to add and edit category 
 export class CategoryComponent implements OnInit {
+  // Event emitter to emit the event when category is added
   onAddCategory = new EventEmitter();
+  // Event emitter to emit the event when category is edited
   onEditCategory = new EventEmitter();
+  // Form group for category form
   categoryForm: any = FormGroup;
+  // Dialog action to check if dialog is for add or edit
   dialogAction: any = 'Add';
+  // Action to check if action is add or update 
   action: any = 'Update';
 
   responseMessage: any;
   constructor(
+    // Injecting MAT_DIALOG_DATA to get data from dialog and formBuilder to create form 
     @Inject(MAT_DIALOG_DATA) public dialogData: any,
     private formBuilder: FormBuilder,
     private categoryService: CategoryService,
