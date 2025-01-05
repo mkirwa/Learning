@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ProductService } from 'src/app/services/product.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { GlobalConstants } from 'src/app/shared/global-constants';
+import { ProductComponent } from '../dialog/product/product.component';
 
 @Component({
   selector: 'app-manage-product',
@@ -19,6 +21,7 @@ export class ManageProductComponent implements OnInit {
   responseMessage: any;
 
   constructor(
+    private dialog: MatDialog,
     private productService: ProductService,
     private ngxService: NgxUiLoaderService,
     private snancbarService: SnackbarService,
@@ -53,7 +56,21 @@ applyFilter(event: Event) {
   this.dataSource.filter = filterValue.trim().toLowerCase();
 
 }
-handleAddAction() {}
+handleAddAction() {
+  const dialogConfig = new MatDialogConfig();
+  dialogConfig.data = {
+    action: 'Add'
+  };
+  dialogConfig.width = '500px';
+  const dialogRef = this.dialog.open(ProductComponent, dialogConfig);
+  this.router.events.subscribe(() => {
+    dialogRef.close();
+  });
+  const sub = dialogRef.componentInstance.onAddProduct.subscribe((response) => {
+    this.tableData();
+    sub.unsubscribe();
+  });
+}
 
 handleEditAction(id: any) {
 
