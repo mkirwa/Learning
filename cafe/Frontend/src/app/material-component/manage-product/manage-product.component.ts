@@ -7,6 +7,7 @@ import { ProductService } from 'src/app/services/product.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { GlobalConstants } from 'src/app/shared/global-constants';
 import { ProductComponent } from '../dialog/product/product.component';
+import { ConfirmationComponent } from '../dialog/confirmation/confirmation.component';
 
 @Component({
   selector: 'app-manage-product',
@@ -72,12 +73,83 @@ handleAddAction() {
   });
 }
 
-handleEditAction(id: any) {
+handleEditAction(values: any) {
+
+  const dialogConfig = new MatDialogConfig();
+  dialogConfig.data = {
+    action: 'Edit',
+    data: values
+  };
+  dialogConfig.width = '500px';
+  const dialogRef = this.dialog.open(ProductComponent, dialogConfig);
+  this.router.events.subscribe(() => {
+    dialogRef.close();
+  });
+  const sub = dialogRef.componentInstance.onEditProduct.subscribe((response) => {
+    this.tableData();
+    sub.unsubscribe();
+  });
 
 }
 
-handleDeleteAction(id: any) {}
+handleDeleteAction(values: any) {
+  const dialogConfig = new MatDialogConfig();
+  dialogConfig.data = {
+    message: 'Are you sure you want to delete this '+values.name+'?',
+    confirmation: true
+  };
+  const dialogref = this.dialog.open(ConfirmationComponent, dialogConfig);
+  const sub = dialogref.componentInstance.onEmitStatusChange.subscribe((response) => {
+    this.ngxService.start();
+    this.deleteProduct(values.id);
+    dialogref.close();
 
-onChange(status: any, id: any) {}
+  });
+}
+
+deleteProduct(id: any) {
+  this.productService.delete(id).subscribe((response: any) => {
+    this.ngxService.stop();
+    this.tableData();
+    this.responseMessage = response?.message;
+    this.snancbarService.openSnackBar(this.responseMessage, 'Success');
+  },(error: any) => {
+    this.ngxService.stop();
+    console.log(error.error?.message);
+
+    if(error.error?.message) { 
+      this.responseMessage = error.error?.message;
+    } else {
+      this.responseMessage = GlobalConstants.genericError;
+    }
+
+    this.snancbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+  });
+}
+
+onChange(status: any, id: any) {
+  this.ngxService.start();
+  const data = {
+    id: id,
+    status: status.toString()
+  };
+  this.productService.updateStatus(data).subscribe((response: any) => {
+    this.ngxService.stop();
+    // this.tableData();
+    this.responseMessage = response?.message;
+    this.snancbarService.openSnackBar(this.responseMessage, 'Success');
+  },(error: any) => {
+    this.ngxService.stop();
+    console.log(error.error?.message);
+
+    if(error.error?.message) { 
+      this.responseMessage = error.error?.message;
+    } else {
+      this.responseMessage = GlobalConstants.genericError;
+    }
+
+    this.snancbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+  });
+}
 
 }
