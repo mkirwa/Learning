@@ -153,3 +153,73 @@ export class ChildComponent {
 - Ensure `NgModel` is correctly imported and configured in your Angular module.
 
 For any issues or improvements, feel free to raise an issue in the repository!
+
+```typescript
+import { Component } from '@angular/core';
+import { ColorService } from './color.service'; // Assume this is the color service
+
+@Component({
+  selector: 'app-car-grid',
+  templateUrl: './car-grid.component.html',
+  styleUrls: ['./car-grid.component.css']
+})
+export class CarGridComponent {
+  rowData: any[] = [];
+  columnDefs = [
+    { field: 'type', headerName: 'Car Type' },
+    { field: 'soldCount', headerName: 'Sold Count', valueGetter: this.calculateSoldCount },
+  ];
+
+  detailCellRendererParams = {
+    detailGridOptions: {
+      columnDefs: [
+        { field: 'vin', headerName: 'VIN' },
+        {
+          field: 'model',
+          headerName: 'Model',
+          valueGetter: (params: any) => this.getColorFromAllInformation(params.data.vin),
+        },
+        { field: 'status', headerName: 'Status' },
+      ],
+    },
+    getDetailRowData: (params: any) => {
+      params.successCallback(params.data.details);
+    },
+  };
+
+  constructor(private colorService: ColorService) {
+    this.rowData = [
+      {
+        type: 'Toyota',
+        details: [
+          { vin: '1HGCM82633A123456', color: 'Red', model: 'Camry', status: 'sold' },
+          { vin: '1HGCM82633A654321', color: 'Blue', model: 'Corolla', status: 'on sale' },
+          { vin: '1HGCM82633A789012', color: 'Black', model: 'Rav4', status: 'sold' },
+        ],
+      },
+      {
+        type: 'Honda',
+        details: [
+          { vin: '2HGCM82633A123456', color: 'White', model: 'Civic', status: 'on sale' },
+          { vin: '2HGCM82633A654321', color: 'Gray', model: 'Accord', status: 'sold' },
+        ],
+      },
+    ];
+  }
+
+  calculateSoldCount(params: any) {
+    if (params.data.type === 'Toyota') {
+      return params.data.details.filter((car: any) => car.status === 'sold').length;
+    }
+    return null;
+  }
+
+  getColorFromAllInformation(vin: string): string {
+    // Call the color service to fetch all color information
+    const allColorInformation = this.colorService.getAllColorInformation(vin, true);
+
+    // Extract and return the `color` field
+    return allColorInformation.color || 'Unknown';
+  }
+}
+```
