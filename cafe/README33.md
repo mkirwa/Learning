@@ -223,3 +223,12 @@ export class CarGridComponent {
   }
 }
 ```
+
+```java
+    // Get the last modified timestamp of the file    
+    // Retrieve the previously recorded modification time from the event list
+    // Check if the previous modification time exists and if the file has not been modified since last check
+    // Get the current system time in milliseconds
+    // If the file has been inactive (unchanged) for more than 5 minutes (300,000 milliseconds), handle error
+
+```
