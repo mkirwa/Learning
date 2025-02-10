@@ -39,4 +39,12 @@ export class ProductService {
     });
   }
 
+  getProductById(id: any) {
+    return this.httpClient.get(this.url + '/product/getById/' + id);
+  }
+
+  getProductByCategoryId(id: any) {
+    return this.httpClient.get(this.url + '/product/getByCategoryId/' + id);
+  }
+
 }
