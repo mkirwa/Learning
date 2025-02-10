@@ -5,6 +5,10 @@ export class GlobalConstants {
     // messages to display when something goes wrong  
     public static genericError: string = 'Something went wrong. Please try again later.';
 
+    public static productExistError: string = 'Product already exists.';
+
+    public static productAdded: string = 'Product added successfully.';
+
     // Regex
     public static nameRegex: string = '[a-zA-Z0-9 ]*';
 
@@ -17,4 +21,5 @@ export class GlobalConstants {
 
     // messages to display when the user is not authenticated
     public static unauthorized: string = 'You are not authorized to access this page.';
+    
 }

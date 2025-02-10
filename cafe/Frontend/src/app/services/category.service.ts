@@ -43,4 +43,11 @@ export class CategoryService {
   getCategories() {
     return this.httpClient.get(this.url + '/category/get');
   }
+
+  // Used by manage-order component to get the categories
+  getFilteredCategories(){
+    // get?filterValue=true is used to get the filtered categories based on the filter value
+    // The filter value is set to true to get the filtered categories
+    return this.httpClient.get(this.url + '/category/get?filterValue=true');
+  }
 }
