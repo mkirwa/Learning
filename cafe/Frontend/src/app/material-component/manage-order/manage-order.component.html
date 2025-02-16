@@ -1,1 +1,8 @@
-<p>manage-order works!</p>
+<mat-card>
+    <b><span>Manage Order</span></b>
+    <button mat-flat-button color="primary" class="float-right" [disabled]="validateSubmit()" (click)="submitAction()">
+        <mat-icon>print</mat-icon> Submit & Get Bill
+    </button>
+</mat-card>
+<hr>
+

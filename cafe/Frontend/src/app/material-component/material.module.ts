@@ -17,6 +17,7 @@ import { Category } from '@material-ui/icons';
 import { CategoryComponent } from './dialog/category/category.component';
 import { ManageProductComponent } from './manage-product/manage-product.component';
 import { ProductComponent } from './dialog/product/product.component';
+import { ManageOrderComponent } from './manage-order/manage-order.component';
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import { ProductComponent } from './dialog/product/product.component';
     ManageCategoryComponent,
     CategoryComponent,
     ManageProductComponent,
-    ProductComponent
+    ProductComponent,
+    ManageOrderComponent
   ]
 })
 export class MaterialComponentsModule {}
