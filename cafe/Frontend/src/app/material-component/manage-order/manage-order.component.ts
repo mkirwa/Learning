@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@material-ui/core';
+import { saveAs } from 'file-saver';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { BillService } from 'src/app/services/bill.service';
 import { CategoryService } from 'src/app/services/category.service';
@@ -145,6 +146,49 @@ export class ManageOrderComponent implements OnInit {
     } else {
       this.snackbarService.openSnackBar(GlobalConstants.productExistError, GlobalConstants.error);
     }
+  }
+
+  handleDeleteAction(value:any, element:any){
+    this.totalAmount = this.totalAmount - element.total;
+    this.dataSource.splice(value, 1);
+    this.dataSource = [...this.dataSource];
+  }
+
+  submitAction(){
+    var formData = this.manageOrderForm.value;
+    var data = {
+      name: formData.name,
+      email: formData.email,
+      contactNumber: formData.contactNumber,
+      paymentMethod: formData.paymentMethod,
+      totalAmount: this.totalAmount.toString(),
+      productDetails: JSON.stringify(this.dataSource)
+    }
+    this.ngxService.start();
+    this.billService.generateReport(data).subscribe((response: any) => {
+      this.downloadFile(response?.uuid);
+      this.manageOrderForm.reset();
+      this.dataSource = [];
+      this.totalAmount = 0;
+    },(error: any) => {
+      console.log(error.error?.message);
+      if(error.error?.message) { 
+        this.responseMessage = error.error?.message;
+      } else {
+        this.responseMessage = GlobalConstants.genericError;
+      }
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    })
+  }
+
+  downloadFile(fileName: string) {
+    var data = {
+      uuid: fileName
+    }
+    this.billService.getPdf(data).subscribe((response: any) => {
+      saveAs(response, fileName + '.pdf');
+      this.ngxService.stop();
+    })
   }
 
 }
