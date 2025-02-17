@@ -6,3 +6,43 @@
 </mat-card>
 <hr>
 
+<mat-card>
+    <b><span>Customer Details:</span></b>
+    <form [formGroup]="manageOrderForm">
+       <div fxFlex fxLayout="column">
+        <div fxLayout="row wrap">
+            <div fxLayout="row wrap">
+
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Customer Name</mat-label>
+                    <input matInput formControlName="name" required>
+                    <mat-error *ngIf="manageOrderForm.controls.name.touched && manageOrderForm.controls.name.invalid">
+                        <span *ngIf="manageOrderForm.controls.name.errors.required"> Name is required</span>
+                        <span *ngIf="manageOrderForm.controls.name.errors.pattern">This field is invalid</span>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" required>
+                    <mat-error *ngIf="manageOrderForm.controls.email.touched && manageOrderForm.controls.email.invalid">
+                        <span *ngIf="manageOrderForm.controls.email.errors.required"> Email is required</span>
+                        <span *ngIf="manageOrderForm.controls.email.errors.pattern">This field is invalid</span>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Contact Number</mat-label>
+                    <input matInput formControlName="contactNumber" required>
+                    <mat-error *ngIf="manageOrderForm.controls.contactNumber.touched && manageOrderForm.controls.contactNumber.invalid">
+                        <span *ngIf="manageOrderForm.controls.contactNumber.errors.required"> Contact number is required</span>
+                        <span *ngIf="manageOrderForm.controls.contactNumber.errors.pattern">This field is invalid</span>
+                    </mat-error>
+                </mat-form-field>
+
+            </div>
+        </div>
+       </div>
+    </form>
+</mat-card>
+
