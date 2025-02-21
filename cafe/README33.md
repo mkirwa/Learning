@@ -232,3 +232,97 @@ export class CarGridComponent {
     // If the file has been inactive (unchanged) for more than 5 minutes (300,000 milliseconds), handle error
 
 ```
+
+# Batch Lookup Optimization
+
+## Overview
+
+This project optimizes database performance by reducing the number of individual queries executed when retrieving target entities associated with car details. Instead of making a separate database call for each car, we batch fetch the data in a single query, significantly improving efficiency.
+
+## Problem Statement
+
+Previously, the system performed an individual DAO lookup for each `CarDetailModel`, resulting in **N queries for N car details**, leading to poor performance. The goal is to refactor this to use a batch query.
+
+## Solution
+
+The solution involves modifying the DAO to support batch fetching using a `WHERE IN` clause, retrieving all required `TargetEntity` records in a single query, and storing them in a map for fast lookup.
+
+## Implementation Details
+
+### 1. Modify the DAO for Batch Lookup
+
+Modify the DAO to fetch multiple `TargetEntity` records at once.
+
+#### **JPA (Hibernate) Implementation**
+
+```java
+@Repository
+public class TargetDaoImpl implements TargetDao {
+    
+    @PersistenceContext
+    private EntityManager entityManager;
+    
+    @Override
+    public Map<String, TargetEntity> lookupBatch(List<String> carIds) {
+        if (carIds == null || carIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        String query = "SELECT t FROM TargetEntity t WHERE t.carID IN :carIds";
+        List<TargetEntity> targets = entityManager.createQuery(query, TargetEntity.class)
+                .setParameter("carIds", carIds)
+                .getResultList();
+
+        return targets.stream().collect(Collectors.toMap(TargetEntity::getCarID, Function.identity()));
+    }
+}
+```
+
+#### **Spring Data JPA Implementation**
+
+```java
+@Repository
+public interface TargetDao extends JpaRepository<TargetEntity, String> {
+    @Query("SELECT t FROM TargetEntity t WHERE t.carID IN :carIds")
+    List<TargetEntity> lookupBatch(@Param("carIds") List<String> carIds);
+}
+```
+
+### 2. Update the Business Logic
+
+Update the service to retrieve all `TargetEntity` records at once and use a map for efficient lookup.
+
+```java
+List<String> carIds = reval.getCarDetails().stream()
+    .map(CarDetailModel::getCarID)
+    .collect(Collectors.toList());
+
+// Fetch all TargetEntities at once
+Map<String, TargetEntity> targetMap = targetDao.lookupBatch(carIds)
+    .stream()
+    .collect(Collectors.toMap(TargetEntity::getCarID, Function.identity()));
+
+for (CarDetailModel carDetailModel : reval.getCarDetails()) {
+    if (StringUtils.startsWith(carDetailModel.getCarTypes(), "G")) {
+        TargetEntity targetCar = targetMap.get(carDetailModel.getCarID());
+        carDetailModel.setCarCode3(targetCar != null ? targetCar.getCarCode3() : "");
+    }
+}
+```
+
+## Benefits
+
+✅ **Before:** **N** queries for **N** `CarDetailModel` records\
+✅ **After:** **1** query for all `TargetEntity` records\
+✅ **Significant reduction in database load and improved response time**
+
+## Conclusion
+
+This batch lookup approach enhances database efficiency and ensures that the application performs optimally, especially when handling a large number of car details.
+
+## License
+
+This project is licensed under the MIT License.
+
+I need something I can download. I can't download this
+
