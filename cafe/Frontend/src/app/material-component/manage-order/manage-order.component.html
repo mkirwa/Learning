@@ -122,6 +122,18 @@
                         <span *ngIf="manageOrderForm.controls.product.errors.pattern">This field is invalid.</span>
                     </mat-error> -->
         </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>Product</mat-label>
+          <mat-select
+            formControlName="product"
+            (selectionChange)="getProductDetails($event.value)"
+          >
+            <mat-option *ngFor="let product of products" [value]="product">
+                {{ product.quantity }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
     </div>
   </form>
