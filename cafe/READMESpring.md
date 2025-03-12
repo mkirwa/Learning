@@ -228,9 +228,168 @@ public String getToyotaId() {
 - Consider caching frequently accessed entity data.
 - Refactor `setFordInformationFromLookup()` to adopt the same batch-processing approach.
 
+______________________________________________________________________________________________________________________________________________________________________________
+
+# Accessing and Storing ToyotaEntityMap and FordEntityMap
+
+## Overview
+This document describes various ways to store and access `toyotaEntityMap` and `fordEntityMap`, which are Hibernate properties, across multiple classes. It also explains Dependency Injection (DI) and provides different approaches to managing these entity maps.
+
+## Understanding Hibernate Properties
+In Hibernate, **entity properties** refer to fields mapped to database columns. These fields are managed by Hibernate and usually require getters and setters to be accessed properly.
+
+### Example:
+```java
+@Entity
+public class ToyotaEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String toyotaId;
+
+    private String modelName;
+    private String carCode;
+
+    public String getToyotaId() { return toyotaId; }
+    public void setToyotaId(String toyotaId) { this.toyotaId = toyotaId; }
+
+    public String getCarCode() { return carCode; }
+    public void setCarCode(String carCode) { this.carCode = carCode; }
+}
+```
+### Key Hibernate Rules:
+- Hibernate **requires getters and setters** for private fields.
+- Properties are **mapped to database fields** and Hibernate manages their lifecycle.
+
+## Understanding Dependency Injection (DI)
+Dependency Injection (DI) is a design pattern where dependencies are **provided from outside a class** rather than being created within it. This avoids hardcoded dependencies and improves maintainability.
+
+### Example of DI:
+```java
+@Service
+public class VehicleService {
+    private final ToyotaDao toyotaDao;
+
+    @Autowired
+    public VehicleService(ToyotaDao toyotaDao) {
+        this.toyotaDao = toyotaDao;
+    }
+
+    public ToyotaEntity getToyotaById(String id) {
+        return toyotaDao.findById(id).orElse(null);
+    }
+}
+```
+✅ **Advantages of Dependency Injection:**
+- Reduces coupling between classes.
+- Allows for better unit testing with mock objects.
+- Managed by Spring’s lifecycle.
+
+## Approaches to Storing and Accessing ToyotaEntityMap and FordEntityMap
+
+### **1️⃣ Using a Static Utility Class (No Dependency Injection)**
+Create a utility class with static methods to store and retrieve entity maps globally.
+
+```java
+public class VehicleDataStore {
+    private static Map<String, ToyotaEntity> toyotaEntityMap = new HashMap<>();
+    private static Map<String, FordEntity> fordEntityMap = new HashMap<>();
+
+    public static void setToyotaEntityMap(Map<String, ToyotaEntity> map) {
+        toyotaEntityMap = map;
+    }
+
+    public static Map<String, ToyotaEntity> getToyotaEntityMap() {
+        return toyotaEntityMap;
+    }
+
+    public static void setFordEntityMap(Map<String, FordEntity> map) {
+        fordEntityMap = map;
+    }
+
+    public static Map<String, FordEntity> getFordEntityMap() {
+        return fordEntityMap;
+    }
+}
+```
+✅ **Pros:** Works without dependency injection.
+❌ **Cons:** Data persists globally, even if not needed.
+
 ---
-**Author:** Development Team  
-**Last Updated:** [Insert Date]
+
+### **2️⃣ Using a Singleton Class (Encapsulation Without DI)**
+Create a singleton to ensure a single instance manages the entity maps.
+
+```java
+public class VehicleSingleton {
+    private static final VehicleSingleton instance = new VehicleSingleton();
+    private Map<String, ToyotaEntity> toyotaEntityMap = new HashMap<>();
+    private Map<String, FordEntity> fordEntityMap = new HashMap<>();
+
+    private VehicleSingleton() {}
+
+    public static VehicleSingleton getInstance() {
+        return instance;
+    }
+
+    public void setToyotaEntityMap(Map<String, ToyotaEntity> map) {
+        this.toyotaEntityMap = map;
+    }
+
+    public Map<String, ToyotaEntity> getToyotaEntityMap() {
+        return toyotaEntityMap;
+    }
+}
+```
+✅ **Pros:** Controls access using `getInstance()`.
+❌ **Cons:** Requires manual access with `getInstance()`.
+
+---
+
+### **3️⃣ Using Spring Service for DI (Recommended for Spring Apps)**
+If using Spring Boot, a service-based approach is recommended.
+
+```java
+@Service
+public class VehicleCacheService {
+    private Map<String, ToyotaEntity> toyotaEntityMap = new HashMap<>();
+    private Map<String, FordEntity> fordEntityMap = new HashMap<>();
+
+    public void setToyotaEntityMap(Map<String, ToyotaEntity> map) {
+        this.toyotaEntityMap = map;
+    }
+
+    public Map<String, ToyotaEntity> getToyotaEntityMap() {
+        return toyotaEntityMap;
+    }
+}
+```
+
+Injecting and using the service:
+```java
+@Autowired
+private VehicleCacheService vehicleCacheService;
+
+public void processVehicles() {
+    ToyotaEntity toyota = vehicleCacheService.getToyotaEntityMap().get("T123");
+    System.out.println(toyota != null ? toyota.getCountryCode3() : "Not Found");
+}
+```
+✅ **Pros:** Works well in large-scale Spring applications.
+❌ **Cons:** Requires `@Autowired` injection.
+
+---
+
+## **Comparison of Approaches**
+| Approach | Best Use Case |
+|----------|--------------|
+| **Static Utility Class** | Simple global access without DI. |
+| **Singleton Class** | Controlled access, avoids global state. |
+| **Spring Service (Recommended)** | Best for scalable Spring apps. |
+
+## Conclusion
+For a Spring-based application, **dependency injection using a service (`@Service`) is recommended**. If DI is not an option, a **Singleton class** provides better encapsulation than a static utility class.
+
+Would you like modifications to fit your existing project structure? 🚀
 
 
 
