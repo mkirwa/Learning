@@ -391,6 +391,92 @@ For a Spring-based application, **dependency injection using a service (`@Servic
 
 Would you like modifications to fit your existing project structure? 🚀
 
+# Using @SecondaryTable to Join Toyota Data in VehicleAssociationEntity
+
+## Overview
+This document explains how to use `@SecondaryTable` in `VehicleAssociationEntity` to pull `ToyotaCarCode` from the `Toyota` table using `CarId`. The implementation prevents accidental updates to the `Toyota` table while ensuring seamless data retrieval.
+
+## Problem Statement
+- The `VehicleAssociation` table contains `CarId`, which is also present in the `Toyota` table.
+- We need to fetch `ToyotaCarCode` from the `Toyota` table without modifying `Toyota` data.
+- Using `@SecondaryTable`, we will join `Toyota` to `VehicleAssociationEntity` and store `ToyotaCarCode` in a transient field.
+
+## Solution
+### 1️⃣ **Update `VehicleAssociationEntity` with `@SecondaryTable`**
+
+```java
+@Entity
+@Table(name = "VehicleAssociation")
+@SecondaryTable(name = "Toyota", pkJoinColumns = @PrimaryKeyJoinColumn(name = "CarId"))
+public class VehicleAssociationEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "CarId")
+    private String carId;
+
+    @Transient  // Prevent accidental update to Toyota table
+    private String toyotaCarCode;
+
+    @Column(name = "ToyotaCarCode", table = "Toyota", insertable = false, updatable = false)
+    private String dbToyotaCarCode;
+
+    public String getToyotaCarCode() {
+        return dbToyotaCarCode;  // Ensure only retrieved, not modified
+    }
+
+    // Getters and Setters
+    public String getCarId() { return carId; }
+    public void setCarId(String carId) { this.carId = carId; }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+}
+```
+
+### 2️⃣ **Explanation**
+✅ **`@SecondaryTable(name = "Toyota")`** – Links the Toyota table to `VehicleAssociationEntity`.
+✅ **`@PrimaryKeyJoinColumn(name = "CarId")`** – Joins tables using `CarId`.
+✅ **`@Column(name = "ToyotaCarCode", table = "Toyota", insertable = false, updatable = false)`** – Prevents modifications to Toyota data.
+✅ **`@Transient` for `toyotaCarCode`** – Ensures safe retrieval without persistence.
+
+---
+
+### 3️⃣ **Handling the "Wrong Number of Columns" Error**
+If you encounter an error stating the entity has the wrong number of columns:
+- Ensure **`CarId` exists in both `Toyota` and `VehicleAssociation` tables**.
+- Verify database schema supports this type of join.
+- If `CarId` is nullable in `VehicleAssociation`, enforce non-nullability:
+  ```java
+  @PrimaryKeyJoinColumn(name = "CarId", nullable = false)
+  ```
+
+---
+
+### 4️⃣ **Querying the Data**
+Fetching `VehicleAssociationEntity` will automatically include `ToyotaCarCode` from the `Toyota` table:
+
+```java
+VehicleAssociationEntity vehicle = vehicleAssociationRepo.findById(1L).orElse(null);
+System.out.println("Toyota Car Code: " + vehicle.getToyotaCarCode());
+```
+
+## Benefits
+✅ **Seamless data retrieval** without additional joins in queries.
+✅ **Ensures Toyota data remains unmodifiable**.
+✅ **Optimized performance using Hibernate's built-in mapping features**.
+
+## Next Steps
+- Ensure `CarId` is indexed for faster lookups.
+- Consider caching frequently accessed data to optimize performance.
+- Validate that `ToyotaCarCode` is correctly retrieved in integration tests.
+
+---
+**Author:** Development Team  
+**Last Updated:** [Insert Date]
+
 
 
 
