@@ -391,7 +391,7 @@ For a Spring-based application, **dependency injection using a service (`@Servic
 
 Would you like modifications to fit your existing project structure? 🚀
 
-# Using @SecondaryTable to Join Toyota Data in VehicleAssociationEntity
+# How to Join Toyota Data in VehicleAssociationEntity
 
 ## Overview
 This document explains how to use `@SecondaryTable` in `VehicleAssociationEntity` to pull `ToyotaCarCode` from the `Toyota` table using `CarId`. The implementation prevents accidental updates to the `Toyota` table while ensuring seamless data retrieval.
@@ -473,9 +473,6 @@ System.out.println("Toyota Car Code: " + vehicle.getToyotaCarCode());
 - Consider caching frequently accessed data to optimize performance.
 - Validate that `ToyotaCarCode` is correctly retrieved in integration tests.
 
----
-**Author:** Development Team  
-**Last Updated:** [Insert Date]
 
 
 
