@@ -474,6 +474,67 @@ System.out.println("Toyota Car Code: " + vehicle.getToyotaCarCode());
 - Validate that `ToyotaCarCode` is correctly retrieved in integration tests.
 
 
+# Joining Toyota Table in VehicleAssociationEntity SQL Query
+
+## Overview
+This document explains how to modify an SQL query to join the `Toyota` table with the `VehicleAssociation` table using `carId` as a common field. The goal is to retrieve the `toyotaCarCode` along with `carId` and `color` from `VehicleAssociationEntity`.
+
+## Problem Statement
+The current SQL query selects data only from `VehicleAssociationEntity`, but we need to **join the Toyota table** to retrieve `toyotaCarCode`, ensuring that it correctly associates with `carId`.
+
+## Solution
+Modify the SQL query to include a **LEFT JOIN** with the `Toyota` table based on `carId`.
+
+### **Updated SQL Query**
+```java
+String carVehicleAssociationEntity =
+    "SELECT carId.id, carId.color, toyota.toyotaCarCode " +
+    "FROM tab.carId carId " +
+    "LEFT JOIN tab.Toyota toyota ON carId.id = toyota.carId " +
+    "WHERE carId.id IN (...)";
+```
+
+### **Explanation of Changes**
+✅ **`LEFT JOIN tab.Toyota toyota ON carId.id = toyota.carId`** → Ensures that Toyota data is linked via `carId`.
+✅ **`toyota.toyotaCarCode` added to `SELECT`** → Retrieves Toyota's car code.
+✅ **`LEFT JOIN` instead of `INNER JOIN`** → Ensures results still appear even if `toyotaCarCode` is `NULL`.
+
+---
+
+## Alternative: Using JPQL (If Using JPA)
+For JPA-based repositories, a JPQL query can achieve the same result:
+
+```java
+@Query("SELECT v.carId, v.color, t.toyotaCarCode " +
+       "FROM VehicleAssociationEntity v " +
+       "LEFT JOIN ToyotaEntity t ON v.carId = t.carId " +
+       "WHERE v.carId IN :carIds")
+List<Object[]> findVehicleAssociationsWithToyota(@Param("carIds") List<String> carIds);
+```
+✅ **Allows Hibernate to automatically handle entity joins**.
+
+---
+
+## Final SQL Query for Execution
+If using **native SQL in Java**, ensure proper string concatenation:
+
+```java
+String carVehicleAssociationEntity =
+    "SELECT carId.id, carId.color, toyota.toyotaCarCode " +
+    "FROM tab.carId carId " +
+    "LEFT JOIN tab.Toyota toyota ON carId.id = toyota.carId " +
+    "WHERE carId.id IN (" + carIdList + ")";
+```
+
+✅ **Ensure `carIdList` is a properly formatted string list of IDs** to avoid syntax errors.
+
+## Next Steps
+- **Validate the query against the database** to ensure correct joins.
+- **Check for any null values in `toyotaCarCode`** and confirm that `LEFT JOIN` retrieves all relevant data.
+- **Optimize indexing on `carId` in both tables** to improve query performance.
+
+
+
 
 
 
