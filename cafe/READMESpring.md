@@ -534,6 +534,195 @@ String carVehicleAssociationEntity =
 - **Optimize indexing on `carId` in both tables** to improve query performance.
 
 
+# XML Ingestion, Processing, and Export Using Java, Hibernate, XSD, and Oracle
+
+## **Overview**
+This document provides a complete guide to processing XML data based on an XSD schema, storing it in an **Oracle database using Hibernate**, and exporting processed data back to XML.
+
+## **Components and Relationships**
+| **Component** | **Role** |
+|--------------|---------|
+| **Java** | Processes XML, validates it against XSD, and interacts with Hibernate. |
+| **Hibernate** | ORM tool that maps Java classes to Oracle database tables. |
+| **XSD (XML Schema Definition)** | Defines the structure and validation rules for XML data. |
+| **Oracle Database** | Stores processed XML data. |
+| **XML** | Format used for ingesting and exporting data. |
+
+---
+
+## **1️⃣ Define XSD Schema**
+The XSD schema ensures XML data is structured correctly before processing.
+
+```xml
+<!-- ingest_schema.xsd -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="IngestRecord">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="RecordId" type="xsd:int"/>
+                <xsd:element name="Name" type="xsd:string"/>
+                <xsd:element name="Timestamp" type="xsd:dateTime"/>
+                <xsd:element name="Status" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
+```
+
+---
+
+## **2️⃣ Example XML File for Ingestion**
+
+```xml
+<!-- ingest_data.xml -->
+<IngestRecord xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ingest_schema.xsd">
+    <RecordId>1</RecordId>
+    <Name>Sample Data</Name>
+    <Timestamp>2024-03-01T12:00:00</Timestamp>
+    <Status>Processed</Status>
+</IngestRecord>
+```
+
+---
+
+## **3️⃣ Define Hibernate Entity (Mapped to Oracle Table)**
+
+```java
+@Entity
+@Table(name = "ingest_record")
+public class IngestRecord {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int recordId;
+    
+    @Column(name = "name")
+    private String name;
+    
+    @Column(name = "timestamp")
+    private LocalDateTime timestamp;
+    
+    @Column(name = "status")
+    private String status;
+    
+    // Getters and Setters
+}
+```
+
+---
+
+## **4️⃣ Configure Hibernate for Oracle (persistence.xml)**
+
+```xml
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+    <persistence-unit name="myPersistenceUnit">
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+            <property name="jakarta.persistence.jdbc.user" value="myuser"/>
+            <property name="jakarta.persistence.jdbc.password" value="mypassword"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle12cDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+</persistence>
+```
+
+---
+
+## **5️⃣ XML Validation Against XSD**
+
+```java
+public class XMLValidator {
+    public static boolean validateXML(String xmlPath, String xsdPath) {
+        try {
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = factory.newSchema(new File(xsdPath));
+            Validator validator = schema.newValidator();
+            validator.validate(new StreamSource(new File(xmlPath)));
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+}
+```
+
+---
+
+## **6️⃣ Parsing XML and Storing Data in Database**
+
+```java
+public class XMLProcessor {
+    public static void main(String[] args) {
+        if (XMLValidator.validateXML("ingest_data.xml", "ingest_schema.xsd")) {
+            try {
+                DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                Document doc = dBuilder.parse(new File("ingest_data.xml"));
+                doc.getDocumentElement().normalize();
+                
+                EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
+                EntityManager em = emf.createEntityManager();
+                em.getTransaction().begin();
+                
+                IngestRecord record = new IngestRecord();
+                record.setRecordId(Integer.parseInt(doc.getElementsByTagName("RecordId").item(0).getTextContent()));
+                record.setName(doc.getElementsByTagName("Name").item(0).getTextContent());
+                record.setTimestamp(LocalDateTime.parse(doc.getElementsByTagName("Timestamp").item(0).getTextContent()));
+                record.setStatus(doc.getElementsByTagName("Status").item(0).getTextContent());
+                
+                em.persist(record);
+                em.getTransaction().commit();
+                em.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+```
+
+---
+
+## **7️⃣ Export Data from Database to XML**
+
+```java
+public class XMLExporter {
+    public static void exportToXML() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
+        EntityManager em = emf.createEntityManager();
+        
+        List<IngestRecord> records = em.createQuery("SELECT r FROM IngestRecord r", IngestRecord.class).getResultList();
+        em.close();
+        
+        try (FileWriter writer = new FileWriter("exported_data.xml")) {
+            writer.write("<IngestRecords>\n");
+            for (IngestRecord record : records) {
+                writer.write("  <IngestRecord>\n");
+                writer.write("    <RecordId>" + record.getRecordId() + "</RecordId>\n");
+                writer.write("    <Name>" + record.getName() + "</Name>\n");
+                writer.write("    <Timestamp>" + record.getTimestamp() + "</Timestamp>\n");
+                writer.write("    <Status>" + record.getStatus() + "</Status>\n");
+                writer.write("  </IngestRecord>\n");
+            }
+            writer.write("</IngestRecords>");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+---
+
+## **📌 Summary**
+✅ **Validate XML against XSD** before processing.
+✅ **Parse XML and store data in Oracle using Hibernate**.
+✅ **Retrieve data from Oracle and export it to an XML file**.
+
+
+
+
 
 
 
