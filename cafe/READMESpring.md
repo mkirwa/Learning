@@ -720,6 +720,123 @@ public class XMLExporter {
 ✅ **Parse XML and store data in Oracle using Hibernate**.
 ✅ **Retrieve data from Oracle and export it to an XML file**.
 
+# Manual CSV Export in AG Grid with Data Flattening
+
+## Overview
+
+This guide explains how to manually extract and flatten data from AG Grid using JavaScript, especially in scenarios where the default `gridApi.exportDataAsCsv()` method does not handle nested or complex data correctly. It also details how the JavaScript spread operator (`...`) is used to safely clone and manipulate row data before export.
+
+---
+
+## Why Manual Export?
+
+AG Grid's native CSV export can struggle with:
+
+- Nested fields
+- Master/detail (nested) grids
+- Complex row transformations
+
+Manually building a flat array of row data allows full control over the export format.
+
+---
+
+## Example: Manual Flattening Code
+
+```ts
+const flatData = [];
+this.gridApi.forEachNode(node => {
+  const row = { ...node.data };
+  // Optionally flatten child/detail data
+  flatData.push(row);
+});
+```
+
+---
+
+## Line-by-Line Explanation
+
+### `const flatData = [];`
+
+Initializes an empty array that will hold all the processed rows in a flat format.
+
+### `this.gridApi.forEachNode(node => {`
+
+Uses AG Grid’s built-in `forEachNode()` method to iterate through all rows in the grid.
+
+### `const row = { ...node.data };`
+
+Clones the row data using the **spread operator**:
+
+- `node.data` is the raw row data.
+- `{ ...node.data }` creates a **shallow copy** to avoid mutating the original grid data.
+- node.data is the original object from AG Grid.
+- { ...node.data } creates a new object with the same properties.
+- This is called a shallow copy (a simple, one-level duplication).
+- We are not modifying the grid's internal data — not just a copy. This can lead to:
+    - Broken grid state
+    - Unexpected UI bugs
+    - Incorrect data exports late
+
+### `flatData.push(row);`
+
+Adds the flattened/cloned row to the `flatData` array.
+
+---
+
+## Adding Flattened Detail Grid Data
+
+If using master/detail grids:
+
+```ts
+if (node.detailGridOptions?.api) {
+  const detailData = [];
+  node.detailGridOptions.api.forEachNode(detailNode => {
+    detailData.push(detailNode.data);
+  });
+  row.detailSummary = JSON.stringify(detailData); // or flatten into row fields
+}
+```
+
+This captures nested grid data and optionally transforms it into a string or separate fields.
+
+---
+
+## Exporting `flatData` as CSV
+
+You can convert `flatData` to a CSV using libraries like [PapaParse](https://www.papaparse.com/):
+
+```ts
+import Papa from 'papaparse';
+const csv = Papa.unparse(flatData);
+
+// Trigger download
+const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+const link = document.createElement('a');
+link.href = URL.createObjectURL(blob);
+link.download = 'export.csv';
+link.click();
+```
+
+---
+
+## Summary
+
+| Component               | Purpose                                             |
+| ----------------------- | --------------------------------------------------- |
+| `forEachNode()`         | Iterate over all rows in the grid                   |
+| Spread operator (`...`) | Clone each row’s data without mutating the original |
+| `flatData`              | Stores processed row data ready for export          |
+| PapaParse               | Converts array of objects to CSV string             |
+
+This approach gives complete control over how the export behaves, supports custom formats, and handles nested or complex data reliably.
+
+---
+
+**Author:** Frontend Engineering Team\
+**Last Updated:** [Insert Date]
+
+What is to clone each rows data without mutating the original? What does that mean? 
+
 
 
 
