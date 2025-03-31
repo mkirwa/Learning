@@ -18,7 +18,7 @@ export class ManageOrderComponent implements OnInit {
   displayedColumns: string[] = ['name', 'category', 'price', 'quantity', 'total', 'edit'];
   dataSource: any = [];
   manageOrderForm: any = FormGroup;
-  categorys: any = [];
+  categories: any = [];
   products: any = [];
   price: any;
   totalAmount: number = 0;
@@ -45,12 +45,23 @@ export class ManageOrderComponent implements OnInit {
       quantity: [null, [Validators.required]],
       price: [null, [Validators.required]],
       total: [0, [Validators.required]]
+      
     });
+
+    this.productService.getProducts().subscribe(products => {
+      this.products = products;
+      console.log("Products:", this.products); // Logs entire array of products
+      // this.products.forEach(product => {
+      //   console.log("Product:", product); // Logs each product object
+      // });
+    });
+
+
   }
 
   getCategorys() {
     this.categoryService.getFilteredCategories().subscribe((response: any) => {
-      this.categorys = response;
+      this.categories = response;
     }, (error: any) => {
       console.log(error.error?.message);
       if (error.error?.message) {
@@ -81,23 +92,23 @@ export class ManageOrderComponent implements OnInit {
 
 
   getProductDetails(value: any) {
-    //console.log("inside getProductDetails");
-    this.productService.getProductById(value.id).subscribe((response: any) => {
-      console.log("inside getProductDetails", response);
-      this.price = response.price;
-      this.manageOrderForm.controls['name'].setValue(response.name);
-      this.manageOrderForm.controls['price'].setValue(response.price);
-      this.manageOrderForm.controls['quantity'].setValue('1');
-      this.manageOrderForm.controls['total'].setValue(this.price * 1);
-    }, (error: any) => {
-      console.log(error.error?.message);
-      if (error.error?.message) {
-        this.responseMessage = error.error?.message;
-      } else {
-        this.responseMessage = GlobalConstants.genericError;
-      }
-      this.SnackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
-    })
+    // TODO: FIGURE OUT WHY THIS DOESN'T WORK OR HOW IT SHOULD WORK
+    // console.log('Selected product:', value);
+    // this.productService.getProductById(value.id).subscribe((response: any) => {
+    //   console.log("inside getProductDetails", response);
+    //   this.price = response.price;
+    //   this.manageOrderForm.controls['price'].setValue(response.price);
+    //   this.manageOrderForm.controls['quantity'].setValue('1');
+    //   this.manageOrderForm.controls['total'].setValue(this.price * 1);
+    // }, (error: any) => {
+    //   console.log(error.error?.message);
+    //   if (error.error?.message) {
+    //     this.responseMessage = error.error?.message;
+    //   } else {
+    //     this.responseMessage = GlobalConstants.genericError;
+    //   }
+    //   this.SnackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    // })
   }
 
   setQuantity(value: any) {

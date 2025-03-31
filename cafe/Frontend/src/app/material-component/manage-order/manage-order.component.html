@@ -112,7 +112,7 @@
             formControlName="category"
             (selectionChange)="getProductsByCategory($event.value)"
           >
-            <mat-option *ngFor="let category of categorys" [value]="category">
+            <mat-option *ngFor="let category of categories" [value]="category">
               {{ category.name }}
             </mat-option>
           </mat-select>
@@ -123,17 +123,40 @@
                     </mat-error> -->
         </mat-form-field>
 
-        <mat-form-field appearance="outline" fxFlex>
-          <mat-label>Product</mat-label>
-          <mat-select
-            formControlName="product"
-            (selectionChange)="getProductDetails($event.value)"
-          >
-            <mat-option *ngFor="let product of products" [value]="product">
-                {{ product.quantity }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <mat-form-field appearance="outline"
+					fxFlex>
+					<mat-label>Product</mat-label>
+					<mat-select (selectionChange)="getProductDetails($event.value)"
+						formControlName="product">
+						<mat-option *ngFor="let product of products"
+							[value]="product">
+							{{ product.name }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+        <mat-form-field appearance="outline"
+					fxFlex>
+					<mat-label>Price</mat-label>
+					<input matInput
+						formControlName="price"
+						required
+						readonly>
+					<mat-error *ngIf="
+                manageOrderForm.controls.price.touched &&
+                manageOrderForm.controls.price.invalid
+              ">
+						<span *ngIf="manageOrderForm.controls.price.errors.required">
+							This field is mandatory.
+						</span>
+						
+						<span *ngIf="manageOrderForm.controls.price.errors.pattern">
+							This field is invalid.
+						</span>
+					</mat-error>
+				</mat-form-field>
+
+        
       </div>
     </div>
   </form>
