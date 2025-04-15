@@ -837,6 +837,131 @@ This approach gives complete control over how the export behaves, supports custo
 
 What is to clone each rows data without mutating the original? What does that mean? 
 
+# Language Selection API Integration
+
+This project demonstrates how a frontend written in TypeScript communicates with a Java Spring Boot backend to handle user-selected language options. The frontend sends language selections as key-value pairs in a JSON payload. The backend receives this data, maps it to internal values (such as database IDs), and processes it accordingly.
+
+---
+
+## 📁 Project Overview
+
+### Frontend (TypeScript)
+- Constructs a payload of user-selected languages:
+  ```ts
+  const controllers = {
+    languageSelection1: "Swahili",
+    languageSelection2: "English"
+  };
+  ```
+- Sends the payload to the backend using `fetch()` or Angular's `HttpClient`.
+
+- Optionally loops through keys and values:
+  ```ts
+  Object.entries(controllers).forEach(([key, value]) => {
+    console.log(`Key: ${key}, Value: ${value}`);
+  });
+  ```
+
+---
+
+### Backend (Java - Spring Boot)
+
+#### DTO (Data Transfer Object)
+```java
+public class LanguageSelectionDTO {
+    private String languageSelection1;
+    private String languageSelection2;
+
+    // Getters and Setters
+    public String getLanguageSelection1() { return languageSelection1; }
+    public void setLanguageSelection1(String languageSelection1) { this.languageSelection1 = languageSelection1; }
+
+    public String getLanguageSelection2() { return languageSelection2; }
+    public void setLanguageSelection2(String languageSelection2) { this.languageSelection2 = languageSelection2; }
+}
+```
+
+#### REST Controller
+```java
+@RestController
+@RequestMapping("/api")
+public class LanguageController {
+
+    @PostMapping("/language-selection")
+    public ResponseEntity<String> handleLanguageSelection(@RequestBody LanguageSelectionDTO dto) {
+        String lang1 = dto.getLanguageSelection1();
+        String lang2 = dto.getLanguageSelection2();
+
+        int lang1Id = mapLanguageToId(lang1);
+        int lang2Id = mapLanguageToId(lang2);
+
+        // Logic for saving or processing
+
+        return ResponseEntity.ok("Languages processed");
+    }
+
+    private int mapLanguageToId(String language) {
+        switch (language.toLowerCase()) {
+            case "swahili": return 1;
+            case "english": return 2;
+            default: return -1;
+        }
+    }
+}
+```
+
+---
+
+## 🗃️ Sample Database Table (language_options)
+
+| id | language   |
+|----|------------|
+| 1  | Swahili    |
+| 2  | English    |
+| 3  | French     |
+
+---
+
+## 🔁 Workflow Summary
+
+1. User selects languages on the frontend.
+2. Payload is constructed and sent to the backend.
+3. Backend receives JSON and maps it to DTO.
+4. Backend uses helper logic or database lookup to convert languages to internal IDs.
+5. Data can be persisted, logged, or used in business logic.
+
+---
+
+## 📦 API Endpoint
+
+- **URL:** `POST /api/language-selection`
+- **Headers:** `Content-Type: application/json`
+- **Sample Body:**
+  ```json
+  {
+    "languageSelection1": "Swahili",
+    "languageSelection2": "English"
+  }
+  ```
+- **Response:**
+  ```json
+  "Languages processed"
+  ```
+
+---
+
+## ✅ Technologies Used
+
+- Frontend: TypeScript or Angular
+- Backend: Java + Spring Boot
+- Optional DB: MySQL / PostgreSQL
+
+---
+
+## 📌 Notes
+
+- Language mapping can be improved by querying the database instead of using hardcoded logic.
+- Input validation and error-handling can be added based on production needs.
 
 
 
