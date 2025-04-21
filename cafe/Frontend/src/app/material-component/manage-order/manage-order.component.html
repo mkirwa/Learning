@@ -126,11 +126,10 @@
         <mat-form-field appearance="outline"
 					fxFlex>
 					<mat-label>Product</mat-label>
-					<mat-select (selectionChange)="getProductDetails($event.value)"
-						formControlName="product">
+					<mat-select formControlName="product" (selectionChange)="getProductDetails($event.value)">
 						<mat-option *ngFor="let product of products"
 							[value]="product">
-							{{ product.name }}
+							{{ product.name  }}
 						</mat-option>
 					</mat-select>
 				</mat-form-field>

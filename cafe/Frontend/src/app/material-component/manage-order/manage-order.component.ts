@@ -93,22 +93,22 @@ export class ManageOrderComponent implements OnInit {
 
   getProductDetails(value: any) {
     // TODO: FIGURE OUT WHY THIS DOESN'T WORK OR HOW IT SHOULD WORK
-    // console.log('Selected product:', value);
-    // this.productService.getProductById(value.id).subscribe((response: any) => {
-    //   console.log("inside getProductDetails", response);
-    //   this.price = response.price;
-    //   this.manageOrderForm.controls['price'].setValue(response.price);
-    //   this.manageOrderForm.controls['quantity'].setValue('1');
-    //   this.manageOrderForm.controls['total'].setValue(this.price * 1);
-    // }, (error: any) => {
-    //   console.log(error.error?.message);
-    //   if (error.error?.message) {
-    //     this.responseMessage = error.error?.message;
-    //   } else {
-    //     this.responseMessage = GlobalConstants.genericError;
-    //   }
-    //   this.SnackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
-    // })
+    console.log('Selected product:', value);
+    this.productService.getProductById(value.id).subscribe((response: any) => {
+      console.log("inside getProductDetails", response);
+      this.price = response.price;
+      this.manageOrderForm.controls['price'].setValue(response.price);
+      this.manageOrderForm.controls['quantity'].setValue('1');
+      this.manageOrderForm.controls['total'].setValue(this.price * 1);
+    }, (error: any) => {
+      console.log(error.error?.message);
+      if (error.error?.message) {
+        this.responseMessage = error.error?.message;
+      } else {
+        this.responseMessage = GlobalConstants.genericError;
+      }
+      this.SnackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    })
   }
 
   setQuantity(value: any) {
