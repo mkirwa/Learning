@@ -974,6 +974,28 @@ this.gridApi.forEachNode((node: any) => {
 });
 ```
 
+## Another option 
+
+```ts
+const flattenNestedRows = (rows: any[]) => {
+    let flattenedRows = [];
+    rows.forEach(row => {
+        // Check if the row has nested data and flatten accordingly
+        flattenedRows.push(row);
+        if (row.nestedRows && Array.isArray(row.nestedRows)) {
+            row.nestedRows.forEach(nestedRow => {
+                // Add the nested row with the parent row's info (if needed)
+                flattenedRows.push({ ...row, ...nestedRow });
+            });
+        }
+    });
+    return flattenedRows;
+};
+
+const flattenedData = flattenNestedRows(gridData);
+this.exportGrid.api.setGridOption('rowData', flattenedData);
+this.exportGrid.api.exportDataAsCsv(exportParams);
+```
 
 
 
