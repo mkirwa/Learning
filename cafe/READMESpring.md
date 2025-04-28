@@ -964,6 +964,16 @@ public class LanguageController {
 - Input validation and error-handling can be added based on production needs.
 
 
+```ts
+const exportParamsFlattened: any[] = [];
+this.gridApi.forEachNode((node: any) => {
+    if (node.isSelected()) {
+        const row = { ...node.data };
+        exportParamsFlattened.push(row);
+    }
+});
+```
+
 
 
 
