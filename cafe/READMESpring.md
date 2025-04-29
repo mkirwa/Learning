@@ -997,6 +997,172 @@ this.exportGrid.api.setGridOption('rowData', flattenedData);
 this.exportGrid.api.exportDataAsCsv(exportParams);
 ```
 
+## Option 1
+
+```ts
+// First, get all selected nodes (parent and nested rows)
+const selectedNodes = this.gridApi.getSelectedNodes();  // This will return both parent and nested rows that are selected
+const exportParamsFlattened: any[] = [];
+
+// Loop through selected nodes
+selectedNodes.forEach(node => {
+    // If it's a parent row, you can export it (you can add extra logic to check specific row types)
+    if (node.data) {
+        exportParamsFlattened.push(node.data);  // Add the parent row data to export list
+    }
+
+    // If the node has nested rows, iterate through the nested rows
+    if (node.data && node.data.nestedRows) {
+        // Iterate through the nested rows to check if any are selected
+        node.data.nestedRows.forEach(nestedRow => {
+            // Check if the nested row is selected
+            if (nestedRow.isSelected) {
+                // Add the selected nested row to the export list
+                exportParamsFlattened.push(nestedRow);
+            }
+        });
+    }
+});
+
+// Now, export the selected nested rows
+this.gridApi.exportDataAsCsv(Object.assign({ onlySelected: true }, { rowData: exportParamsFlattened }));
+```
+
+## Option 2
+
+```ts
+// First, get all selected parent nodes
+const selectedNodes = this.gridApi.getSelectedNodes();
+const exportParamsFlattened: any[] = [];
+
+// Loop through selected parent nodes
+selectedNodes.forEach(parentNode => {
+    // Add parent row data
+    exportParamsFlattened.push(parentNode.data);
+
+    // Check if the parent node has a child grid (nested rows)
+    const childGrid = parentNode.gridOptions.api; // Access the child grid API
+
+    if (childGrid) {
+        const childSelectedRows = childGrid.getSelectedRows();  // Get selected rows in the child grid (nested rows)
+        
+        // Add selected child rows to the export data
+        childSelectedRows.forEach(childRow => {
+            exportParamsFlattened.push(childRow);
+        });
+    }
+});
+
+// Now, export the selected rows (both parent and nested selected rows)
+this.gridApi.exportDataAsCsv(Object.assign({ onlySelected: true }, { rowData: exportParamsFlattened }));
+```
+
+Here's a README template that explains how to access selected rows in AG Grid and export them to a CSV file. You can copy and paste this into a README file for your project:
+
+---
+
+# AG Grid - Exporting Selected Rows to CSV
+
+## Description
+This guide explains how to **access selected rows** in an AG Grid instance and export them to a CSV file. It provides two main approaches:
+
+1. **Accessing selected rows using AG Grid's API (`getSelectedRows()` and `getSelectedNodes()`)**
+2. **Accessing selected rows manually via HTML/CSS (fallback)**
+
+The solution also includes functionality to **export the selected rows to CSV**.
+
+## Prerequisites
+
+Ensure you have the following:
+- **AG Grid** installed and set up in your project.
+- **Basic knowledge of TypeScript** and **JavaScript**.
+
+## Accessing Selected Rows
+
+### 1. Using `getSelectedRows()` (Preferred)
+
+To get the selected rows in the grid, use AG Grid's `getSelectedRows()` method. This method will return the selected **parent rows**. Here's how to use it:
+
+```typescript
+const selectedRows = this.gridApi.getSelectedRows();  // Get selected parent rows
+
+// Ensure that selectedRows is not empty
+if (selectedRows.length > 0) {
+    console.log(selectedRows); // Log the selected rows for debugging
+
+    // Export the selected rows to CSV
+    this.exportToCsv(selectedRows);
+} else {
+    console.log("No rows are selected");
+}
+```
+
+### 2. Accessing Selected Rows via HTML (Fallback)
+
+If `getSelectedRows()` doesn’t return the expected data, you can **manually access the selected rows** via their HTML elements using `querySelectorAll()`. Here's an example of how to access selected rows via HTML:
+
+```typescript
+// Accessing selected rows manually by querying the DOM
+const selectedRowsHtml = document.querySelectorAll('.ag-row-selected');  // .ag-row-selected is the CSS class for selected rows in AG Grid
+
+// Collect the data for each selected row
+const selectedRows = [];
+selectedRowsHtml.forEach(row => {
+    const rowData = row.getAttribute('data-row-index');  // Assuming the row has a row-index attribute
+    selectedRows.push(rowData);
+});
+
+// Export the selected rows to CSV
+this.exportToCsv(selectedRows);
+```
+
+### **Note**: The `querySelectorAll('.ag-row-selected')` method targets rows with the `ag-row-selected` class, which is used by AG Grid for selected rows.
+
+## Exporting Selected Rows to CSV
+
+Once you've obtained the selected rows, you can **export them to a CSV file**. Here's a function to handle exporting the data:
+
+```typescript
+exportToCsv(selectedRows: any[]) {
+    // Construct CSV from selected rows (assuming selectedRows is an array of objects)
+    const headers = Object.keys(selectedRows[0]).join(',');  // Get the column headers (keys of the first row)
+    const rows = selectedRows.map(row => Object.values(row).join(','));  // Convert row values to CSV string
+
+    const csvContent = [headers, ...rows].join('\n');  // Combine headers and rows into CSV format
+
+    // Create a Blob from the CSV content and trigger a download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.setAttribute('href', URL.createObjectURL(blob));
+    link.setAttribute('download', 'selected_rows.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();  // Trigger the download
+    document.body.removeChild(link);  // Clean up the DOM after download
+}
+```
+
+### **Explanation**:
+1. **Get Column Headers**: `Object.keys(selectedRows[0])` retrieves the column headers for the CSV.
+2. **Get Row Values**: `Object.values(row)` gets the row values and converts them into CSV format.
+3. **Create Blob**: A `Blob` is created with the type `text/csv;charset=utf-8;` to ensure the file is saved with the correct encoding.
+4. **Download**: The download is triggered programmatically using a hidden link element, and the CSV file is saved with the name `selected_rows.csv`.
+
+## Final Steps
+
+1. **Test Your Implementation**: 
+   - Ensure that **rows are properly selected** in your grid.
+   - Verify that the **CSV export works** and contains the expected data.
+
+2. **Customize as Needed**: 
+   - If your grid has a **nested structure** or uses **complex filtering** or **sorting**, you might need to adjust how rows are selected and exported.
+
+---
+
+## Conclusion
+
+By using `getSelectedRows()` or directly accessing selected rows from the HTML, you can easily gather selected data and export it into a CSV file. The approach outlined in this guide helps you work around any issues with the default AG Grid methods, ensuring you can access and export the selected data to CSV even when working with more complex grid structures.
+
 
 
 
