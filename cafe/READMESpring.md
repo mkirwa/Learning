@@ -1164,6 +1164,96 @@ exportToCsv(selectedRows: any[]) {
 By using `getSelectedRows()` or directly accessing selected rows from the HTML, you can easily gather selected data and export it into a CSV file. The approach outlined in this guide helps you work around any issues with the default AG Grid methods, ensuring you can access and export the selected data to CSV even when working with more complex grid structures.
 
 
+## OPTION 450
+
+```ts 
+// Now loop through the rows and export each master row and its nested rows (child rows)
+    const allRows = masterDataCsv.split('\r\n').slice(1); // Skip the header and get data rows --- masterData ni ile ya kwanza
+
+    // Assuming only 3 rows (1 master row + 2 nested rows), we export them in order
+    allRows.forEach((masterRowCsv, index) => {
+        exportData.push(this.prepareForExport(masterRowCsv));  // Add master row to export
+
+        // For each master row, we need to export its child grid (nested rows)
+        if (index < 2) {  // We only have 2 nested rows, check index 0 (master) and 1 (first child), and 2 (second child)
+            const masterRowNode = this.gridApi.getRowNode(index); // Get the row node for the current master row
+            const nestedGridRows = this.getNestedRowsForMasterRow(masterRowNode);  // Get child (nested) rows for this master row
+
+            // Export the nested rows (child rows) under the corresponding master row
+            nestedGridRows.forEach(childRow => {
+                const childRowCsv = this.convertRowToCsv(childRow); // Convert each child row to CSV format
+                exportData.push(this.prepareForExport(childRowCsv));  // Add child row to export data
+            });
+        }
+    });
+
+    return exportData;
+
+
+// Helper function to get nested rows for a master row (child rows)
+private getNestedRowsForMasterRow(masterRowNode: any): any[] {
+    // Assuming the master row node contains a grid options for the nested grid (child grid)
+    const childGridApi = masterRowNode.gridOptions.api;
+    return childGridApi.getSelectedRows();  // Get the selected rows from the nested (child) grid
+}
+
+// Helper function to convert row to CSV format
+private convertRowToCsv(row: any): string {
+    return Object.values(row).join(',');  // Convert row object values to CSV format (comma-separated)
+}
+
+```
+
+
+## OPTION 451 - get all the grids and columns and see which has data
+
+```ts
+public handleExportCsvWithDataOnly(exportParams: BaseExportParams): void {
+    const exportData: Array<string> = new Array<string>();
+
+    // Get all columns in the grid
+    const allColumns = this.gridApi.getAllColumns();
+    const selectedRows = this.gridApi.getDisplayedRowAtIndex(0); // Get the first displayed row to check headers, or iterate all rows
+
+    const columnsWithData: string[] = [];  // This will store columns that have data
+    const rows = this.gridApi.getAllRows();  // Get all rows in the grid
+
+    // Check each column for data
+    allColumns.forEach(col => {
+        let hasData = false;
+        
+        // Iterate over all rows and check if the column has data
+        rows.forEach(row => {
+            if (row[col.colId] && row[col.colId] !== '') {
+                hasData = true; // Found data for this column in the row
+            }
+        });
+
+        // If data exists for this column, add it to columnsWithData
+        if (hasData) {
+            columnsWithData.push(col.colId);  // Add column ID (or header name) to columnsWithData
+        }
+    });
+
+    // Prepare the header row (only including columns with data)
+    const headerRow = allColumns
+        .filter(col => columnsWithData.includes(col.colId))  // Only include columns with data
+        .map(col => col.getColDef().headerName)
+        .join(',');
+
+    exportData.push(headerRow);  // Add header row to export data
+
+    // Loop through each row and create CSV data for the selected columns
+    rows.forEach(row => {
+        const rowData = columnsWithData.map(colId => row[colId] || '');  // Get data for each selected column
+        exportData.push(rowData.join(','));  // Join row data with commas and add to export data
+    });
+
+    // Export the data
+    this.exportCsv(exportData);
+}
+```
+
 
 
 
