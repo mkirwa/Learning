@@ -240,3 +240,26 @@ This example demonstrates how to implement a **master-detail grid** with **AG Gr
 --- 
 
 This README provides a clear explanation and setup for implementing AG Grid with **master-detail** functionality and **CSV export**. You can use this as a template in your project or adapt it as needed.
+
+
+```ts
+
+// TODO: 
+// Access the first element in the array
+const firstObject = myArray[0];
+
+// Now access the 'field' property correctly:
+console.log(firstObject.field);  // Output: "field 1"
+
+// TODO: 
+const firstObject = JSON.parse(myArray[0]);
+
+// Now you can access the 'field' property
+console.log(firstObject.field);  // Output: "field 1"
+
+// TODO: 
+const fieldName = 'field';
+console.log(firstObject[fieldName]);  // Output: "field 1"
+
+
+```
