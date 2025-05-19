@@ -1254,6 +1254,330 @@ public handleExportCsvWithDataOnly(exportParams: BaseExportParams): void {
 }
 ```
 
+**Toyota Java Service Architecture Overview**
 
+This document provides an overview of the architectural structure and responsibilities of each package in the `toyota` Java service, with a focus on its JMS (Java Message Service) integration.
+
+---
+
+## 1. Controller
+
+The `controller` package exposes REST endpoints to interact with the Toyota service.
+
+*  Manages configuration-related endpoints.
+* Allows clients to perform data queries.
+* Handles retry settings and configurations.
+* Triggers synchronization workflows, often interfacing with JMS queues.
+
+**Example Usage:**
+
+```http
+GET /toyota/config
+POST /toyota/retry/config
+```
+
+---
+
+## 2. Converter
+
+Responsible for transforming JMS messages into a more processable format.
+
+* Converts raw JMS messages into a `Map<String, Object>` structure.
+
+**Example:**
+
+```java
+Map<String, Object> data = converter.convert(message);
+```
+
+---
+
+## 3. Daemon
+
+Houses background scheduled jobs.
+
+*  Scheduled job that retries failed operations or message deliveries.
+
+**Example:**
+
+```java
+@Scheduled(cron = "0 0/5 * * * ?")
+public void retryFailedMessages() { /* retry logic */ }
+```
+
+---
+
+## 4. Error Handler
+
+Global error handling layer.
+
+* Captures and processes exceptions thrown in controller layer.
+
+**Example:**
+
+```java
+@ControllerAdvice
+public class ErrorHandler {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handle(Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
+    }
+}
+```
+
+---
+
+## 5. JMS
+
+Handles message-based asynchronous communication.
+
+### Listener:
+
+*  Listens to the JMS queue and processes messages accordingly.
+
+**Example:**
+
+```java
+@JmsListener(destination = "toyota.sync.queue")
+public void receiveSyncMessage(String message) {
+    // Processing logic
+}
+```
+
+### Sender:
+
+*  Defines JMS constants (e.g., queue names).
+*  Enum or logic to manage message priorities.
+*  Tracks supported JMS versions.
+* Sends query messages to JMS queues.
+* Detects and handles expired JMS messages.
+
+**Example:**
+
+```java
+jmsTemplate.convertAndSend(TOYOTA_SYNC_QUEUE, message, m -> {
+    m.setJMSPriority(HIGH_PRIORITY);
+    return m;
+});
+```
+
+---
+
+## 6. Security
+
+Encapsulates security-related utilities.
+
+* **toyotaSecurityHelper.java**: Interface for security operations.
+* **toyotaSecurityHelperImpl.java**: Implements authentication, token validation, etc.
+
+**Example:**
+
+```java
+if (securityHelper.isValidToken(token)) {
+    // Allow operation
+}
+```
+
+---
+
+## 7. Service
+
+Contains business logic, orchestration, and implementation classes.
+
+### Configuration:
+
+* Logic for retrieving and updating configuration data.
+
+### Query:
+
+* Query business logic and data retrieval.
+
+### Retry:
+
+*  Retry rules and configuration.
+*  Core retry logic.
+
+### Sync:
+
+*  Handles sync workflows and JMS message dispatch.
+
+### Utility:
+
+* Maps metadata formats (e.g., DTOs to entities).
+
+**Example:**
+
+```java
+
+```
+
+---
+
+## Summary Architecture Flow:
+
+```plaintext
+Client --> Controller --> Service --> JMS Sender --> JMS Queue
+                                         |
+                           <--- JMS Listener (e.g. toyotaSyncQueueList)
+                                         |
+                           --> Processing --> Retry Daemon / Converter
+```
+
+---
+
+This modular breakdown allows for scalable development, separation of concerns, and reliable asynchronous message processing using JMS.
+
+
+
+# Java Message Service (JMS) - Overview and Example
+
+## What is JMS?
+
+**Java Message Service (JMS)** is a Java API that allows applications to create, send, receive, and read messages in a loosely coupled, asynchronous, and reliable way. JMS is commonly used for integrating different components of a distributed system through **message queues** and **topics**.
+
+### Key Features:
+- **Asynchronous communication**: Producers send messages without waiting for consumers to be ready.
+- **Reliable delivery**: Messages are persisted until consumed.
+- **Loosely coupled architecture**: Sender and receiver do not need to be online at the same time.
+
+---
+
+## JMS in Action – Conceptual Flow
+
+1. **Producer** sends a message to a **JMS Queue**.
+2. **Broker** (like ActiveMQ or RabbitMQ) stores the message.
+3. **Consumer/Listener** receives and processes the message asynchronously.
+
+---
+
+## JMS Terminologies
+
+| Term           | Description |
+|----------------|-------------|
+| **Queue**      | Point-to-point destination. One message to one receiver. |
+| **Topic**      | Publish-subscribe destination. One message to multiple subscribers. |
+| **Message**    | Data sent between applications. |
+| **Producer**   | Component that sends messages. |
+| **Consumer**   | Component that receives messages. |
+| **Broker**     | Middleware (e.g. ActiveMQ) that routes messages. |
+
+---
+
+## Example – Toyota Service with JMS
+
+Let’s say you want to sync Toyota metadata using JMS:
+
+### Sender: `toyotaSyncQueryJmsMessages.java`
+
+```java
+@Autowired
+private JmsTemplate jmsTemplate;
+
+public void sendSyncRequest(String payload) {
+    jmsTemplate.convertAndSend("toyota.sync.queue", payload, message -> {
+        message.setJMSPriority(8); // High priority
+        message.setStringProperty("messageVersion", "v1.0");
+        return message;
+    });
+}
+
+
+Here is a copy-paste-friendly `README.md` explaining **JMS (Java Message Service)** with context and example relevant to your Toyota service:
+
+---
+
+````markdown
+# Java Message Service (JMS) - Overview and Example
+
+## What is JMS?
+
+**Java Message Service (JMS)** is a Java API that allows applications to create, send, receive, and read messages in a loosely coupled, asynchronous, and reliable way. JMS is commonly used for integrating different components of a distributed system through **message queues** and **topics**.
+
+### Key Features:
+- **Asynchronous communication**: Producers send messages without waiting for consumers to be ready.
+- **Reliable delivery**: Messages are persisted until consumed.
+- **Loosely coupled architecture**: Sender and receiver do not need to be online at the same time.
+
+---
+
+## JMS in Action – Conceptual Flow
+
+1. **Producer** sends a message to a **JMS Queue**.
+2. **Broker** (like ActiveMQ or RabbitMQ) stores the message.
+3. **Consumer/Listener** receives and processes the message asynchronously.
+
+---
+
+## JMS Terminologies
+
+| Term           | Description |
+|----------------|-------------|
+| **Queue**      | Point-to-point destination. One message to one receiver. |
+| **Topic**      | Publish-subscribe destination. One message to multiple subscribers. |
+| **Message**    | Data sent between applications. |
+| **Producer**   | Component that sends messages. |
+| **Consumer**   | Component that receives messages. |
+| **Broker**     | Middleware (e.g. ActiveMQ) that routes messages. |
+
+---
+
+## Example – Toyota Service with JMS
+
+Let’s say you want to sync Toyota metadata using JMS:
+
+### Sender: `toyotaSyncQueryJmsMessages.java`
+
+```java
+@Autowired
+private JmsTemplate jmsTemplate;
+
+public void sendSyncRequest(String payload) {
+    jmsTemplate.convertAndSend("toyota.sync.queue", payload, message -> {
+        message.setJMSPriority(8); // High priority
+        message.setStringProperty("messageVersion", "v1.0");
+        return message;
+    });
+}
+````
+
+### Listener: `toyotaSyncQueueList.java`
+
+```java
+@JmsListener(destination = "toyota.sync.queue")
+public void receiveMessage(String message) {
+    System.out.println("Received sync message: " + message);
+    // Process the sync request
+}
+```
+
+---
+
+## Tools Typically Used
+
+| Tool             | Purpose                                           |
+| ---------------- | ------------------------------------------------- |
+| **ActiveMQ**     | Open-source JMS broker                            |
+| **JmsTemplate**  | Spring’s abstraction to send/receive JMS messages |
+| **@JmsListener** | Annotation to define a JMS consumer               |
+
+---
+
+## Benefits in Toyota Service Context
+
+* **Decoupling**: Controllers or services can send data to queues without knowing who processes it.
+* **Retry Mechanism**: If processing fails, daemon jobs (e.g., `toyotaErrorRetryJob`) can reprocess messages.
+* **Scalability**: Listeners can scale horizontally to consume more messages in parallel.
+
+---
+
+## Final Notes
+
+* **JMS is ideal** for situations where asynchronous processing is needed (e.g., syncing metadata or retrying failed operations).
+* **Ensure durability** and **dead-letter queue** support for failed message handling in production environments.
+
+```
+
+
+```
 
 
