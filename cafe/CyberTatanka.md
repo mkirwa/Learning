@@ -201,6 +201,10 @@ If the file doesn't exist, `vi` will create it upon saving.
 
 ---
 
+* `ping` - sends a packet and waits for a response.
+* `nmap` - discovers hosts and services on a computer network by sending pacekts and analying responses. 
+* `nmap -sU  -p 53 8.8.8.8` - findout if this port is open 
+
 Let me know if you'd like this exported as a one-page cheat sheet!
 
 
