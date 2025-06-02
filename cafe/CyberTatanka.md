@@ -204,6 +204,13 @@ If the file doesn't exist, `vi` will create it upon saving.
 * `ping` - sends a packet and waits for a response.
 * `nmap` - discovers hosts and services on a computer network by sending pacekts and analying responses. 
 * `nmap -sU  -p 53 8.8.8.8` - findout if this port is open 
+* `netstat -nap` 
+* `lsof -i -P` - shows all open applications associated with network connections and gives you the raw port number. 
+* proc - provides the ability to scrap a processs. 
+* strings 
+* if you want to not log history, put a space infront of a command. 
+
+* `lsof +L1` -  
 
 Let me know if you'd like this exported as a one-page cheat sheet!
 
