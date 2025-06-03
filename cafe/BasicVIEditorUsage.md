@@ -25,6 +25,8 @@
 
 ---
 
+Here’s a concise and practical guide to using `vi` (or `vim`, its improved version), which is a powerful text editor in Unix/Linux systems:
+
 ### 📂 **Opening a File**
 
 ```bash

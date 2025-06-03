@@ -78,20 +78,41 @@ Here's a cleaned-up and more coherent version of your notes, organized by Linux 
 
 * if you want to make a directory hidden add a . infront of the directory. 
 
-Here’s a concise and practical guide to using `vi` (or `vim`, its improved version), which is a powerful text editor in Unix/Linux systems:
 
+Here’s a cleaned-up and completed version of your notes with consistent formatting and brief explanations:
 
+---
 
-* `ping` - sends a packet and waits for a response.
-* `nmap` - discovers hosts and services on a computer network by sending packets and analying responses. 
-* `nmap -sU  -p 53 8.8.8.8` - findout if this port is open 
-* `netstat -nap` 
-* `lsof -i -P` - shows all open applications associated with network connections and gives you the raw port number. 
-* proc - provides the ability to scrap a processs. 
-* strings 
-* if you want to not log history, put a space infront of a command. 
+### 🔧 Networking & Process Inspection Commands
 
-* `lsof +L1` -  
+* **`ping <host>`**
+  Sends ICMP echo request packets to test network connectivity and measure response time.
+
+* **`nmap`**
+  Network exploration tool used to discover hosts and services by sending packets and analyzing responses.
+
+* **`nmap -sU -p 53 8.8.8.8`**
+  Performs a UDP scan (`-sU`) on port 53 (DNS) of the target IP (`8.8.8.8`) to check if the port is open.
+
+* **`netstat -nap`**
+  Displays active network connections, routing tables, interface statistics, and associated processes (`-n` for numeric, `-a` for all, `-p` to show PID/program).
+
+* **`lsof -i -P`**
+  Lists open files related to internet connections and displays raw port numbers (`-i` for network files, `-P` to avoid port name resolution).
+
+* **`lsof +L1`**
+  Lists open files that have been deleted from the filesystem but are still held open by a process — useful for identifying file descriptor leaks.
+
+* **`strings <file>`**
+  Extracts printable strings from a binary file; often used in malware analysis or to inspect compiled binaries.
+
+* **`/proc`**
+  A virtual filesystem in Linux that provides detailed information about system processes and kernel parameters. It allows you to inspect or "scrape" runtime process details (e.g., `/proc/<PID>/`).
+
+* **Command history tip**
+  Prefixing a command with a space (e.g., `  ls`) prevents it from being logged in your shell history (if `HISTCONTROL=ignorespace` is set in the shell config).
+
+---
 
 * Get a book to learn how to use bash --- bash is used by every major linux distribution. If you learn bash you know what 
 package manager they're using. 
