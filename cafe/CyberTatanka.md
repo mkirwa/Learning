@@ -117,4 +117,110 @@ Here’s a cleaned-up and completed version of your notes with consistent format
 * Get a book to learn how to use bash --- bash is used by every major linux distribution. If you learn bash you know what 
 package manager they're using. 
 
+## LOG ANALYSIS ##
+
+Here's a breakdown of what each command does, including inline **comments and explanations** on **why** it's being used:
+
+---
+
+### 🔁 1. `cd /opt/firewall_log`
+
+```bash
+cd /opt/firewall_log
+```
+
+* **What it does:** Changes the current working directory to `/opt/firewall_log`.
+* **Why:** This directory likely contains firewall logs, such as `ASA-syslogs.txt`, used for analysis.
+
+---
+
+### 🔎 2. `grep 192.168.1.6 ASA-syslogs.txt | grep -v 24.230.56.6 | less`
+
+```bash
+grep 192.168.1.6 ASA-syslogs.txt | grep -v 24.230.56.6 | less
+```
+
+* **What it does:**
+
+  * `grep 192.168.1.6`: Find lines related to internal IP `192.168.1.6`.
+  * `grep -v 24.230.56.6`: Exclude lines with public IP `24.230.56.6`.
+  * `less`: View the filtered results page-by-page.
+* **Why:** Investigating traffic involving `192.168.1.6`, excluding known/irrelevant traffic from `24.230.56.6`.
+
+---
+
+### 🔍 3. Filter FIN flag and external IP:
+
+```bash
+grep 192.168.1.6 ASA-syslogs.txt | grep -v 24.230.56.6 | grep FIN | grep 13.107.237.38 | cut -d ' ' -f 1,3,4,5,7,8,9,10,11,12,13,14
+```
+
+* **What it does:**
+
+  * Filters logs involving `192.168.1.6`, excluding traffic from `24.230.56.6`.
+  * `grep FIN`: Looks for TCP FIN (connection termination) flags.
+  * `grep 13.107.237.38`: Focuses on connections involving this public IP (possibly Microsoft or cloud traffic).
+  * `cut -d ' ' -f 1,3,4,5,7,8,9,10,11,12,13,14`: Extracts key fields from the log line.
+* **Why:** This helps narrow down specific connection terminations to/from a suspicious IP, for deeper inspection.
+
+---
+
+### 📊 4. Repeat with different IP:
+
+```bash
+grep 192.168.1.6 ASA-syslogs.txt | grep -v 24.230.56.6 | grep FIN | grep 18.160.185.174 | cut -d ' ' -f 1,3,4,5,7,8,9,10,11,12,13,14
+```
+
+* **What it does:** Same as above, but focused on IP `18.160.185.174` (could be Amazon CloudFront).
+* **Why:** Checking if multiple suspicious FIN flags exist involving different services or destinations.
+
+---
+
+### 🔢 5. Extract only the 14th field:
+
+```bash
+grep 192.168.1.6 ASA-syslogs.txt | grep -v 24.230.56.6 | grep FIN | grep 18.160.185.174 | cut -d ' ' -f 14
+```
+
+* **What it does:** Extracts the 14th whitespace-delimited field (likely a port or byte count).
+* **Why:** Isolating a key metric for later analysis (e.g., packet sizes, durations, or ports).
+
+---
+
+### 📈 6. Extract port-like field and run statistics:
+
+```bash
+grep 192.168.1.6 ASA-syslogs.txt | grep -v 24.230.56.6 | grep FIN | grep 18.160.185.174 \
+| cut -d ' ' -f 8,14 \
+| tr : ' ' | tr / ' ' \
+| cut -d ' ' -f 4 \
+| Rscript -e 'y <-scan("stdin", quiet=TRUE)' -e 'cat(min(y), max(y), mean(y), sd(y), var(y), sep="\n")'
+```
+
+* **What it does:**
+
+  1. **`cut -d ' ' -f 8,14`**: Extracts the 8th and 14th fields (maybe source/destination + port info).
+  2. **`tr : ' '`** and **`tr / ' '`**: Replace `:` and `/` with spaces for uniform parsing.
+  3. **`cut -d ' ' -f 4`**: Grabs the port number or numeric value of interest.
+  4. **`Rscript`**: Uses R to:
+
+     * Read the numbers from stdin.
+     * Print `min`, `max`, `mean`, `standard deviation`, and `variance`.
+
+* **Why:** Perform **statistical analysis** (e.g., of port numbers, response sizes, or duration) to detect patterns or anomalies — such as consistent targeting of specific ports.
+
+---
+
+### ✅ Summary of Purpose:
+
+You're performing a **focused network log analysis**:
+
+* Isolate traffic from a local IP.
+* Exclude known harmless sources.
+* Zoom in on **TCP FIN flags**, which mark session closures.
+* Filter by specific external IPs (maybe suspicious).
+* Extract and statistically analyze **metrics** (like port usage or byte sizes) for anomaly detection.
+
+Let me know if you want this as a reusable script or want to pivot to IP reputation lookups.
+'
 
