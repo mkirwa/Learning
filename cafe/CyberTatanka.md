@@ -224,3 +224,5 @@ You're performing a **focused network log analysis**:
 Let me know if you want this as a reusable script or want to pivot to IP reputation lookups.
 '
 
+`cat /dev/urandom` --- to print staff on your screen
+
