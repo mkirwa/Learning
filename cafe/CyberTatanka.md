@@ -225,4 +225,10 @@ Let me know if you want this as a reusable script or want to pivot to IP reputat
 '
 
 `cat /dev/urandom` --- to print staff on your screen
+### LSASS DUMPING TECHNIQUES ###
 
+* LSASS - (Local Security Authority Subsystem Service) is a crucial process in the Windows operating system responsible for enforcing the security policy on a computer.
+
+* Windows Prefetch -  is a feature in the Windows operating system designed to speed up the boot process and application startup times by preloading certain files and data into memory. 
+
+* 
