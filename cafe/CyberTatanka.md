@@ -231,4 +231,12 @@ Let me know if you want this as a reusable script or want to pivot to IP reputat
 
 * Windows Prefetch -  is a feature in the Windows operating system designed to speed up the boot process and application startup times by preloading certain files and data into memory. 
 
+## Day 2 Prompt ##
+* Several users have reported that they received an email stating that their backup medical records have been encrypted with a few of the records attached as proof.
+
+### What I did ###
+* Ran an nmap scan on the ip address so `nmap 172.16.100.8` and found these ports open 22/tcp and 25/tcp 
+* ssh into the machine using the provided credentials 
+* Went to the /var/log directory and cat'd mail.log to find the emails being sent out. 
 * 
+
