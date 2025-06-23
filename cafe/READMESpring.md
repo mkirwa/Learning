@@ -1580,4 +1580,141 @@ public void receiveMessage(String message) {
 
 ```
 
+Based on your description, you're experiencing a **404 error** for a JSON file (`iac-definitions.json`) after upgrading to **Angular 18**, and you're also seeing missing UI components, potentially related to **Angular Material Stepper**. Let's break it down and provide a systematic approach to troubleshooting:
+
+---
+
+## 🔎 Breakdown of the Problem
+
+### 1. **Error**
+
+```
+404 - iac-definitions.json not found at \common\js\IAX\s\IAC
+```
+
+* This likely means the file either **does not exist**, is **not copied during build**, or the **path is broken**.
+* It could also be that **Angular 18’s stricter file path resolution** or **base href configuration** is interfering.
+
+### 2. **Missing Component/UI**
+
+* You mentioned that only the top component loads, and a second one (possibly controlled by a stepper or some logic) **doesn’t show up**.
+* You suspect the issue is related to **Angular Material Stepper**, and you found the `material/` folder empty or not present.
+
+---
+
+## ✅ Step-by-Step Fix Suggestions
+
+### ✅ Step 1: **Fix the 404 for `iac-definitions.json`**
+
+* Confirm that the JSON file is located in the expected path in your `src/` folder.
+* If it's a static asset, **ensure it's listed in `angular.json` under `assets`**:
+
+```json
+"assets": [
+  "src/favicon.ico",
+  "src/assets",
+  "src/common/js/IAX/s/IAC/iac-definitions.json"
+]
+```
+
+* If the path is dynamically loaded (e.g., via `HttpClient.get()`), confirm the **relative path** in your code matches where it's built.
+
+  ```ts
+  this.http.get('/assets/common/js/IAX/s/IAC/iac-definitions.json');
+  ```
+
+---
+
+### ✅ Step 2: **Fix Material Stepper or Missing Module**
+
+* Check that you're importing **Angular Material Stepper modules** properly in the component’s or shared module:
+
+```ts
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+```
+
+* Also ensure `BrowserAnimationsModule` is in your `AppModule`.
+
+* Run:
+
+```bash
+npm install @angular/material@18 @angular/cdk@18
+```
+
+* If the `material/` folder appears empty, it could be a corrupted install. Try:
+
+```bash
+rm -rf node_modules package-lock.json
+npm cache clean --force
+npm install
+```
+
+---
+
+### ✅ Step 3: **Inspect HTML for Second Component**
+
+* If the second component isn’t loading, ensure:
+
+  * It's included in the current route/template.
+  * It's **declared in the right module**.
+  * There are **no errors in the browser console** that are silently preventing its load.
+  * If using \*ngIf, make sure the condition is true.
+
+```html
+<app-top-component></app-top-component>
+<app-missing-component *ngIf="showSecondComponent"></app-missing-component>
+```
+
+---
+
+### ✅ Step 4: **Look for Breaking Changes in Angular 18**
+
+Angular 18 has minor but **strict compiler and dependency changes**. Review:
+
+* Routes
+* Component selectors
+* Import paths
+* Template syntax (check for deprecated APIs)
+
+---
+
+### ✅ Step 5: **Enable Debug Logs**
+
+Use console logs and Angular DevTools to:
+
+* Check if the second component is being created
+* Inspect the DOM and lifecycle hooks (`ngOnInit`, etc.)
+
+---
+
+## 🧪 Optional: Fallback Diagnostic
+
+If the app broke after Angular upgrade:
+
+```bash
+ng update
+ng lint
+ng build --verbose
+```
+
+Look for missing dependencies, deprecated APIs, or unexpected behavior.
+
+---
+
+## 📌 Summary
+
+| Issue                           | Fix                                              |
+| ------------------------------- | ------------------------------------------------ |
+| `iac-definitions.json` 404      | Add it to `assets` in `angular.json`             |
+| Missing Angular Material folder | Reinstall `@angular/material` and `@angular/cdk` |
+| Stepper not rendering           | Re-import `MatStepperModule`, confirm HTML logic |
+| Component not showing           | Check module declarations and \*ngIf conditions  |
+| Angular 18 changes              | Run `ng lint`, use Angular DevTools              |
+
+---
+
+Would you like to share your `angular.json` file, part of the HTML file with the missing component, or any code using the JSON file? I can help tailor the fix even better.
+
 
