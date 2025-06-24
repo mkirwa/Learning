@@ -1718,3 +1718,139 @@ Look for missing dependencies, deprecated APIs, or unexpected behavior.
 Would you like to share your `angular.json` file, part of the HTML file with the missing component, or any code using the JSON file? I can help tailor the fix even better.
 
 
+Thanks — now we’re getting to the core issue:
+
+---
+
+### 🔍 What’s happening?
+
+When you render this:
+
+```html
+<p-tab> {{ activeTab.tab }} </p-tab>
+```
+
+You see:
+
+```
+[object Object]
+```
+
+repeated 5 times.
+
+---
+
+### ✅ Why this is happening:
+
+You're binding `activeTab.tab`, which is an **object**, and using `{{ activeTab.tab }}` in the template — Angular will call `.toString()` on it, and unless overridden, that returns:
+
+```
+[object Object]
+```
+
+You’re rendering the **whole tab object** instead of its `label`.
+
+---
+
+## ✅ How to Fix It
+
+Here’s what you need to do:
+
+---
+
+### ✅ 1. Update Template to Show Each Tab's Label (and fix syntax):
+
+```html
+<p-tabs [value]="activeTab" (valueChange)="tabChanged($event)" class="navigation-tab-menu">
+  <p-tablist>
+    @for (tab of chipTabs; track tab.route) {
+      <p-tab [value]="tab">
+        <span>{{ tab.label }}</span>
+      </p-tab>
+    }
+  </p-tablist>
+</p-tabs>
+```
+
+> 🔄 This now binds each `p-tab` to the **tab object** (`[value]="tab"`)
+> and displays the **label** of each tab (`{{ tab.label }}`)
+
+---
+
+### ✅ 2. Update `chipTabs` Structure
+
+Ensure `chipTabs` looks like this in your `.ts`:
+
+```ts
+chipTabs = [
+  { label: 'Tab One', route: 'tab_One' },
+  { label: 'Tab Two', route: 'tab_Two' },
+  { label: 'Tab Three', route: 'tab_Three' },
+  { label: 'Tab Four', route: 'tab_Four' },
+  { label: 'Tab Five', route: 'tab_Five' }
+];
+```
+
+> If you’re using an enum or service that defines these values, that's fine — just make sure each item has a `label` and an identifier (e.g., `route` or `value`).
+
+---
+
+### ✅ 3. Set and Track Active Tab Properly
+
+In your component:
+
+```ts
+activeTab = this.chipTabs[0]; // or wherever your default is
+
+tabChanged(newTab: any) {
+  this.activeTab = newTab;
+  console.log('Switched to:', newTab.label); // no more [object Object]
+}
+```
+
+---
+
+### 🔄 Alternate: Track by string instead of object (if needed)
+
+If you want to bind by a string value (like the route or enum key), use:
+
+```html
+<p-tabs [value]="activeTabKey" (valueChange)="tabChanged($event)">
+  <p-tablist>
+    @for (tab of chipTabs; track tab.route) {
+      <p-tab [value]="tab.route">
+        {{ tab.label }}
+      </p-tab>
+    }
+  </p-tablist>
+</p-tabs>
+```
+
+And then in `.ts`:
+
+```ts
+activeTabKey = 'tab_Two'; // or default value from enum
+
+tabChanged(route: string) {
+  this.activeTabKey = route;
+  const tab = this.chipTabs.find(t => t.route === route);
+  console.log('Changed to tab:', tab?.label);
+}
+```
+
+---
+
+## ✅ Summary
+
+| Problem                     | Fix                                                               |
+| --------------------------- | ----------------------------------------------------------------- |
+| `[object Object]` in the UI | Use `{{ tab.label }}` not `{{ tab }}`                             |
+| Incorrect `value` binding   | Use `[value]="tab"` instead of full object                        |
+| Need to track by key        | Use `[value]="tab.route"` and update active route string manually |
+
+---
+
+Would you like help switching to route-based tab tracking (`routerLink` integration)?
+
+
+
