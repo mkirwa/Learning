@@ -1852,5 +1852,136 @@ tabChanged(route: string) {
 
 Would you like help switching to route-based tab tracking (`routerLink` integration)?
 
+Thanks for the follow-up. Let's break this down clearly and **fix both issues properly**:
+
+---
+
+## 🧩 Problem 1: **Close “X” doesn’t do anything**
+
+This is because you're updating `activeTab = null` or similar, but PrimeNG's `<p-tabs>` won't automatically close the tab like the old `[closable]="true"` used to in `<p-tabPanel>`.
+
+### ✅ Working Solution for Close “X”
+
+You must **remove or hide the tab content manually**. Example below shows how to toggle the tab visibility:
+
+---
+
+### ✔ Template (with toggle support)
+
+```html
+<p-tabs [(value)]="activeTab">
+  <p-tablist>
+    <p-tab *ngIf="showTab" value="0">
+      <ng-template pTemplate="header">
+        Main Tab
+        <button (click)="closeTab($event)" class="tab-close-btn">×</button>
+      </ng-template>
+    </p-tab>
+  </p-tablist>
+
+  <p-tabpanels>
+    <p-tabpanel *ngIf="showTab" value="0">
+      <!-- Content here -->
+    </p-tabpanel>
+  </p-tabpanels>
+</p-tabs>
+```
+
+---
+
+### ✔ Component (.ts)
+
+```ts
+export class YourComponent {
+  showTab = true;
+  activeTab = 0;
+
+  closeTab(event: Event) {
+    event.stopPropagation(); // important to stop tab switching
+    this.showTab = false;
+    this.activeTab = null;
+  }
+}
+```
+
+---
+
+## 🎯 Problem 2: **Splitter isn't dynamic**
+
+You mentioned the splitter doesn't dynamically adjust or causes content to hide. That usually means the container isn't sized or flowing correctly.
+
+---
+
+### ✅ Use `<p-splitter>` the **correct way** (re-checked for PrimeNG 18)
+
+Ensure you **do not wrap `<p-splitter>` inside a heightless or collapsed element.** It must have a parent with an explicit height.
+
+---
+
+### ✔ Full Working Example
+
+#### ✔ Component HTML
+
+```html
+<div class="tab-wrapper">
+  <p-tabs [(value)]="activeTab">
+    <p-tablist>
+      <p-tab value="0">
+        <ng-template pTemplate="header">
+          Dashboard
+          <button (click)="closeTab($event)" class="tab-close-btn">×</button>
+        </ng-template>
+      </p-tab>
+    </p-tablist>
+
+    <p-tabpanels>
+      <p-tabpanel value="0">
+        <div class="splitter-wrapper">
+          <p-splitter layout="horizontal">
+            <p-splitterPanel size="75">
+              <app-left-splitter></app-left-splitter>
+            </p-splitterPanel>
+            <p-splitterPanel size="25">
+              <an-app-component-for-the-side-splitter></an-app-component-for-the-side-splitter>
+            </p-splitterPanel>
+          </p-splitter>
+        </div>
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</div>
+```
+
+#### ✔ CSS (Component or Global)
+
+```css
+.tab-wrapper {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.splitter-wrapper {
+  height: 100%;
+  width: 100%;
+}
+```
+
+---
+
+## 💡 Key Gotchas:
+
+* ✅ Ensure **every parent container up to `body` has height set** (`100%`, `100vh`, etc.).
+* ✅ If the splitter is inside a `div` or tab without height, it won’t render properly.
+* ✅ Use `size="75"` and `size="25"` for initial layout, or `minSize`/`maxSize` if needed.
+* ✅ The close button must **use `*ngIf`** to toggle tabs in PrimeNG 18 — there is no built-in `closable` property.
+
+---
+
+### 🔄 Want:
+
+* A working **stackblitz** demo link?
+* Or the layout to include **vertical split + tabs**?
+
+Let me know and I’ll generate it for you.
 
 
